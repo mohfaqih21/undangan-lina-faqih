@@ -1,0 +1,379 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Undangan Lina & Faqih</title>
+  <meta name="description" content="Undangan Digital Lina & Faqih - satu file HTML (responsive)" />
+  <style>
+    /* ---------- Reset & Basic ---------- */
+    :root{
+      --blue:#1e5fbf;
+      --muted:#f5f5f7;
+      --glass: rgba(255,255,255,0.65);
+      --card-radius:18px;
+      --font-sans: 'Poppins', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+      --font-script: 'Great Vibes', cursive;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%;margin:0;font-family:var(--font-sans);background:#fff;color:#111}
+
+    /* ---------- Container & Slides (vertical) ---------- */
+    .wrap{height:100vh;overflow:hidden;position:relative}
+    .scroller{height:100%;width:100%;overflow-y:auto;scroll-snap-type:y mandatory;scroll-behavior:smooth}
+    section{min-height:100vh;padding:30px 20px;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:18px;scroll-snap-align:start;position:relative}
+
+    /* make backgrounds cover */
+    .bg-cover{position:absolute;inset:0;background-size:cover;background-position:center;filter:brightness(.95);z-index:0}
+    .content{z-index:2;width:100%;max-width:900px}
+
+    /* ---------- Common overlays (lists/icons) ---------- */
+    .corner{position:absolute;z-index:3}
+    .corner.top-right{top:18px;right:18px}
+    .corner.bottom-left{bottom:18px;left:18px}
+
+    /* ---------- Slide 1: Opening ---------- */
+    .invite-open{display:flex;flex-direction:column;align-items:center;gap:18px;text-align:center;padding:40px}
+    .couple-photo{width:260px;height:260px;object-fit:cover;border-radius:12px;border:6px solid rgba(255,255,255,0.28);box-shadow:0 8px 30px rgba(0,0,0,.12)}
+    .names{font-family:var(--font-script);font-size:42px;color:var(--blue)}
+    .invitation-line{font-size:18px;line-height:1.4;max-width:760px}
+    .to-name{font-weight:700;margin-top:18px}
+    .open-envelope{display:inline-flex;align-items:center;gap:8px;padding:12px 18px;border-radius:999px;background:var(--glass);cursor:pointer}
+
+    /* ---------- Slide 2: Hero & Countdown ---------- */
+    .hero{width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;padding:40px}
+    .hero .happy{font-family:var(--font-script);font-size:48px}
+    .hero .img-wrap{position:relative;width:320px;height:420px;margin-top:6px}
+    .hero img.center-photo{width:100%;height:100%;object-fit:cover;border-radius:12px;box-shadow:0 18px 50px rgba(0,0,0,.25)}
+    .countdown{display:flex;gap:12px;margin-top:18px;flex-wrap:wrap;justify-content:center}
+    .cd-box{min-width:96px;background:rgba(255,255,255,0.9);backdrop-filter: blur(6px);padding:12px;border-radius:12px;text-align:center;box-shadow:0 6px 16px rgba(0,0,0,.08)}
+    .cd-box .num{font-size:28px;font-weight:800}
+    .cd-box .lbl{font-size:12px;opacity:.8}
+    .save-cal{margin-top:10px;display:inline-block;padding:8px 12px;border-radius:10px;background:var(--blue);color:#fff;text-decoration:none}
+    video.bird{position:absolute;top:8%;right:6%;width:140px;pointer-events:none;z-index:4}
+
+    /* ---------- Slide 3: Details w/ frames ---------- */
+    .detail-row{display:flex;gap:20px;align-items:center;flex-wrap:wrap;justify-content:center}
+    .person{display:flex;gap:12px;align-items:center}
+    .frame{width:140px;height:170px;border-radius:14px;overflow:hidden;box-shadow:0 12px 30px rgba(0,0,0,.15);border:6px solid rgba(255,255,255,.7)}
+    .person .meta{max-width:260px}
+    .person .meta .name{font-family:var(--font-script);font-size:22px}
+    .person .meta .desc{font-size:13px;color:#333}
+    .ampersand{font-family:var(--font-script);font-size:48px;margin:18px 0}
+
+    /* ---------- Slide 4: Quran Verse ---------- */
+    .verse{max-width:760px;text-align:center;padding:34px;border-radius:14px;background:rgba(255,255,255,0.85);box-shadow:0 8px 30px rgba(0,0,0,.08)}
+    .arab{font-size:28px;line-height:1.6}
+    .translation{margin-top:12px;font-size:16px}
+
+    /* ---------- Slide 5: Save The Date & map ---------- */
+    .card{padding:18px;border-radius:14px;background:var(--glass);backdrop-filter: blur(6px);box-shadow:0 10px 30px rgba(0,0,0,.08);text-align:center}
+    .map-link{display:inline-block;margin-top:8px;padding:8px 12px;border-radius:10px;background:#e9eefc;text-decoration:none;color:var(--blue)}
+
+    /* ---------- Slide 6: Titip Hadiah ---------- */
+    .bank{font-weight:700;background:rgba(255,255,255,0.95);padding:12px;border-radius:12px}
+    .copy-btn{display:inline-block;margin-left:8px;padding:6px 8px;border-radius:8px;background:#ddd;cursor:pointer}
+
+    /* ---------- Slide 7: Guest Messages ---------- */
+    .guest-list{width:100%;max-width:720px}
+    .guest-item{padding:10px;border-radius:10px;background:rgba(255,255,255,0.9);margin-bottom:8px}
+
+    /* ---------- Slide 8: Thanks ---------- */
+    .thanks{display:flex;flex-direction:column;align-items:center}
+
+    /* ---------- Bottom Controls ---------- */
+    .controls{position:fixed;left:50%;transform:translateX(-50%);bottom:12px;display:flex;gap:8px;z-index:999}
+    .controls button{padding:8px 10px;border-radius:12px;border:0;background:rgba(255,255,255,0.95);box-shadow:0 6px 18px rgba(0,0,0,.08);cursor:pointer}
+
+    /* ---------- Responsive tweaks ---------- */
+    @media(max-width:600px){
+      .names{font-size:34px}
+      .hero .img-wrap{width:220px;height:300px}
+      .frame{width:118px;height:150px}
+      .cd-box{min-width:72px}
+      .controls{gap:6px}
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <!-- snow canvas -->
+    <canvas id="snow" style="position:fixed;left:0;top:0;right:0;bottom:0;pointer-events:none;z-index:10"></canvas>
+
+    <!-- audio (file name as requested: lagu.mp3) -->
+    <audio id="bg-audio" src="lagu.mp3" preload="auto" loop></audio>
+
+    <div class="scroller" id="scroller">
+      <!-- Slide 1 -->
+      <section id="slide-1" aria-label="Buka Undangan">
+        <div class="bg-cover" style="background-image:url('bgistana.jpg');opacity:.95"></div>
+        <img class="corner top-right" src="list1.png" alt="list" width="64"/>
+        <img class="corner bottom-left" src="list2.png" alt="list" width="64"/>
+        <div class="content invite-open">
+          <img src="pasangan.png" alt="Pasangan" class="couple-photo"/>
+          <div class="names">Lina &amp; Faqih</div>
+          <div class="invitation-line">Tanpa Mengurangi Rasa Hormat, Kami Mengundang Bapak/Ibu/Saudara/I untuk Hadir di Acara Kami</div>
+          <div class="to-name">Kepada: <span id="to-placeholder">-</span></div>
+          <div class="open-envelope" id="open-envelope"><img src="icon-envelope.png" width="22" alt="amplop"/> Buka Undangan</div>
+        </div>
+      </section>
+
+      <!-- Slide 2 -->
+      <section id="slide-2">
+        <div class="bg-cover" style="background-image:url('suasana.jpg')"></div>
+        <img class="corner top-right" src="list1.png" alt="list" width="64"/>
+        <img class="corner bottom-left" src="list2.png" alt="list" width="64"/>
+        <div class="content hero">
+          <div class="happy">Happy Wedding</div>
+          <div class="img-wrap">
+            <!-- background castle and pillars are placed by layering in markup -->
+            <img src="istana.png" alt="istana" style="position:absolute;left:0;right:0;top:-12%;width:100%;height:100%;object-fit:cover;filter:brightness(0.9);z-index:0;border-radius:12px"/>
+            <img src="pilar.png" alt="pilar" style="position:absolute;left:-8%;top:10%;width:26%;height:auto;z-index:1;opacity:0.95"/>
+            <img src="pilar.png" alt="pilar" style="position:absolute;right:-8%;top:10%;width:26%;height:auto;z-index:1;opacity:0.95;transform:scaleX(-1)"/>
+            <img class="center-photo" src="pasangantbg.png" alt="foto kami" style="position:relative;z-index:2"/>
+          </div>
+
+          <div class="countdown" id="countdown">
+            <div class="cd-box"><div class="num" id="days">0</div><div class="lbl">Days</div></div>
+            <div class="cd-box"><div class="num" id="hours">0</div><div class="lbl">Hours</div></div>
+            <div class="cd-box"><div class="num" id="minutes">0</div><div class="lbl">Minutes</div></div>
+            <div class="cd-box"><div class="num" id="seconds">0</div><div class="lbl">Seconds</div></div>
+          </div>
+
+          <a class="save-cal" id="save-cal" href="#">Save to Calendar</a>
+        </div>
+        <video class="bird" autoplay muted loop playsinline src="burung.mp4"></video>
+      </section>
+
+      <!-- Slide 3 -->
+      <section id="slide-3">
+        <div class="bg-cover" style="background-image:url('bg2.png')"></div>
+        <div class="content">
+          <div style="font-size:20px">بِسْمِ اللّٰهِ الرَّحْمٰنِ الرَّحِيْمِ</div>
+          <p style="max-width:720px">Atas Rahmat Allah SWT, Kami bermaksud mengundang anda di acara Kami. Merupakan suatu kehormatan dan kebahagiaan bagi kami sekeluarga apabila Bapak/Ibu/Saudara/I berkenan hadir dan memberikan doa restu pada:</p>
+
+          <div class="detail-row">
+            <div class="person" id="person-lina">
+              <div class="frame"><img src="lina.jpg" style="width:100%;height:100%;object-fit:cover"/></div>
+              <div class="meta"><div class="name">Marlina</div><div class="desc">putri dari Bapak Lina &amp; Ummi Lina<br/>Beralamat di Bogor</div></div>
+            </div>
+
+            <div class="ampersand">&amp;</div>
+
+            <div class="person" id="person-faqih">
+              <div class="frame"><img src="faqih.jpg" style="width:100%;height:100%;object-fit:cover"/></div>
+              <div class="meta"><div class="name">Muhammad Faqih</div><div class="desc">putra dari Abi Faqih &amp; Mama Faqih<br/>Beralamat di Jakarta</div></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 4: Ayat -->
+      <section id="slide-4">
+        <div class="bg-cover" style="background-image:url('bgistana2.jpg');opacity:.98"></div>
+        <img class="corner top-right" src="list1.png" alt="list" width="64"/>
+        <img class="corner bottom-left" src="list2.png" alt="list" width="64"/>
+        <div class="content verse">
+          <div style="font-weight:700">Surat Ar-Rum ayat 21</div>
+          <div class="arab">وَمِنْ ءَايَـٰتِهِ أَن خَلَقَ لَكُم مِّنْ أَنفُسِكُمْ أَزْوَٰجًا لِّتَسْكُنُوا إِلَيْهَا ۚ وَجَعَلَ بَيْنَكُم مَّوَدَّةً وَرَحْمَةً ۚ إِنَّ فِي ذَٰلِكَ لَآيَاتٍ لِّقَوْمٍ يَتَفَكَّرُونَ</div>
+          <div class="translation">"Dan di antara tanda‑tanda (kebesaran)‑Nya ialah Dia menciptakan untukmu isteri‑isteri dari jenismu sendiri, supaya kamu cenderung dan merasa tenteram kepadanya, dan dijadikan‑Nya di antara kamu rasa kasih dan sayang."</div>
+        </div>
+      </section>
+
+      <!-- Slide 5: Save The Date -->
+      <section id="slide-5">
+        <div class="bg-cover" style="background-image:url('bg2.png');opacity:.98"></div>
+        <div class="content card">
+          <div style="font-weight:700;font-size:18px">Save The Date</div>
+          <div style="margin-top:8px">Akad &amp; Resepsi Pernikahan</div>
+          <div style="margin-top:6px">Desember</div>
+          <div style="margin:6px 0;font-weight:800">Minggu | 14 | 2025</div>
+          <div>Rumah Lina</div>
+          <a class="map-link" href="https://maps.app.goo.gl/UWhk7CUqkBS6rZ3Z9" target="_blank" rel="noopener">Map Lokasi Acara</a>
+        </div>
+      </section>
+
+      <!-- Slide 6: Titip Hadiah -->
+      <section id="slide-6">
+        <div class="bg-cover" style="background-image:url('bg2.png');opacity:.98"></div>
+        <div class="content">
+          <div class="card">
+            <div style="font-weight:700">Titip Hadiah</div>
+            <p>Doa restu Bapak/Ibu sekalian merupakan karunia yang sangat berarti bagi kami. Dan jika memberi merupakan ungkapan tanda kasih, Bapak/Ibu dapat memberi kado secara cashless. Terima kasih.</p>
+            <div class="bank">Rek. BCA a.n Marlina <span id="rek">1234567890</span> <button class="copy-btn" id="copy-rek">Copy</button></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 7: Ucapan -->
+      <section id="slide-7">
+        <div class="bg-cover" style="background-image:url('bg2.png');opacity:.98"></div>
+        <div class="content">
+          <div style="font-weight:700;margin-bottom:8px">Ucapan &amp; Doa</div>
+          <div class="guest-list" id="guest-list">
+            <!-- sample messages -->
+            <div class="guest-item">Bapak Budi: Semoga lancar dan barokah.</div>
+            <div class="guest-item">Ibu Siti: Selamat menempuh hidup baru!</div>
+          </div>
+          <textarea id="guest-input" placeholder="Tulis ucapan Anda..." style="width:100%;height:86px;border-radius:10px;padding:8px"></textarea>
+          <div style="display:flex;gap:8px;margin-top:8px"><button id="add-guest">Kirim Ucapan</button><button id="clear-guest">Hapus Semua</button></div>
+        </div>
+      </section>
+
+      <!-- Slide 8: Thanks -->
+      <section id="slide-8">
+        <div class="bg-cover" style="background-image:url('bgistana.jpg');opacity:.95"></div>
+        <div class="content thanks">
+          <img src="pasangan.png" alt="Pasangan" style="width:200px;border-radius:12px;"/>
+          <div class="names">Lina &amp; Faqih</div>
+          <div style="font-size:18px;margin-top:10px">Terima kasih</div>
+        </div>
+      </section>
+
+    </div>
+
+    <!-- bottom controls -->
+    <div class="controls" role="toolbar" aria-label="kontrol undangan">
+      <button id="nav-prev" title="Sebelumnya">◀</button>
+      <button id="nav-play" title="Hentikan/Mulai scroll otomatis">⏯</button>
+      <button id="nav-mute" title="Mute musik">🔈</button>
+      <button id="nav-next" title="Selanjutnya">▶</button>
+      <button id="go-slide-1">1</button>
+      <button id="go-slide-2">2</button>
+      <button id="go-slide-3">3</button>
+      <button id="go-slide-4">4</button>
+      <button id="go-slide-5">5</button>
+      <button id="go-slide-6">6</button>
+      <button id="go-slide-7">7</button>
+      <button id="go-slide-8">8</button>
+    </div>
+
+  </div>
+
+  <script>
+    /* ---------------- Utility & initial setup ---------------- */
+    const scroller = document.getElementById('scroller');
+    const slides = Array.from(document.querySelectorAll('section'));
+    let auto = true;
+    let autoTimer = null;
+
+    // recipient from URL param e.g. ?to=Bapak%20Budi
+    function getParam(name){const p=new URLSearchParams(location.search);return p.get(name)||p.get(name.toLowerCase())||''}
+    const toName = decodeURIComponent(getParam('to')||getParam('kepada')||'Bapak Budi');
+    document.getElementById('to-placeholder').textContent = toName || 'Bapak/Ibu/Saudara/I';
+
+    // envelope behavior: scroll to slide 2 and play music
+    const openBtn = document.getElementById('open-envelope');
+    const audio = document.getElementById('bg-audio');
+    openBtn.addEventListener('click',()=>{
+      goToSlide(2);
+      audio.play().catch(()=>console.log('autoplay prevented'));
+    });
+
+    /* ---------------- Countdown to 14 Dec 2025 08:00 WIB (Asia/Jakarta) ---------------- */
+    // convert target date to UTC by taking Asia/Jakarta offset (UTC+7)
+    const target = new Date(Date.UTC(2025,11,14,1,0,0)); // 08:00 WIB = 01:00 UTC (Dec month index 11)
+
+    function updateCountdown(){
+      const now = new Date();
+      const diff = Math.max(0, target.getTime() - now.getTime());
+      const s = Math.floor(diff/1000);
+      const days = Math.floor(s/86400);
+      const hours = Math.floor((s%86400)/3600);
+      const mins = Math.floor((s%3600)/60);
+      const secs = s%60;
+      document.getElementById('days').textContent = days;
+      document.getElementById('hours').textContent = String(hours).padStart(2,'0');
+      document.getElementById('minutes').textContent = String(mins).padStart(2,'0');
+      document.getElementById('seconds').textContent = String(secs).padStart(2,'0');
+    }
+    updateCountdown();setInterval(updateCountdown,1000);
+
+    // Save to calendar: create ICS and google calendar link
+    const saveBtn = document.getElementById('save-cal');
+    saveBtn.addEventListener('click', (e)=>{
+      e.preventDefault();
+      const title = encodeURIComponent('Akad & Resepsi Pernikahan Lina & Faqih');
+      const details = encodeURIComponent('Akad & Resepsi Pernikahan');
+      const location = encodeURIComponent('Rumah Lina');
+      // Google Calendar URL (dates in YYYYMMDDTHHMMSSZ UTC)
+      const start = '20251214T010000Z'; // 08:00 WIB -> 01:00 UTC
+      const end = '20251214T050000Z';
+      const gUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${title}&details=${details}&location=${location}&dates=${start}/${end}`;
+      // Also create .ics blob for download
+      const ics = [`BEGIN:VCALENDAR`,`VERSION:2.0`,`PRODID:-//Undangan//EN`,`BEGIN:VEVENT`,`UID:${Date.now()}@undangan`,`DTSTAMP:${toICSDate(new Date())}` ,`DTSTART:20251214T010000Z`,`DTEND:20251214T050000Z`,`SUMMARY:${decodeURIComponent(title)}` ,`DESCRIPTION:${decodeURIComponent(details)}` ,`LOCATION:${decodeURIComponent(location)}`,`END:VEVENT`,`END:VCALENDAR`].join('\r\n');
+      const blob = new Blob([ics],{type:'text/calendar'});
+      const url = URL.createObjectURL(blob);
+
+      // open google calendar in new tab and also download ics
+      window.open(gUrl,'_blank');
+      const a = document.createElement('a');a.href=url;a.download='undangan.ics';document.body.appendChild(a);a.click();a.remove();
+      URL.revokeObjectURL(url);
+    });
+    function toICSDate(d){return d.toISOString().replace(/[-:]/g,'').split('.')[0]+'Z'}
+
+    /* ---------------- Auto scroll behavior ---------------- */
+    function goToSlide(n){n = Math.max(1,Math.min(n,slides.length));const el = document.getElementById('slide-'+n);if(el){el.scrollIntoView({behavior:'smooth'});} }
+    document.getElementById('go-slide-1').onclick = ()=>goToSlide(1);
+    document.getElementById('go-slide-2').onclick = ()=>goToSlide(2);
+    document.getElementById('go-slide-3').onclick = ()=>goToSlide(3);
+    document.getElementById('go-slide-4').onclick = ()=>goToSlide(4);
+    document.getElementById('go-slide-5').onclick = ()=>goToSlide(5);
+    document.getElementById('go-slide-6').onclick = ()=>goToSlide(6);
+    document.getElementById('go-slide-7').onclick = ()=>goToSlide(7);
+    document.getElementById('go-slide-8').onclick = ()=>goToSlide(8);
+
+    document.getElementById('nav-next').addEventListener('click',()=>{ const idx = visibleIndex(); goToSlide(idx+1)});
+    document.getElementById('nav-prev').addEventListener('click',()=>{ const idx = visibleIndex(); goToSlide(idx-1)});
+
+    // auto-scrolling every 6 seconds
+    function startAuto(){stopAuto();autoTimer=setInterval(()=>{const idx=visibleIndex();const next = (idx>=slides.length)?1:idx+1;goToSlide(next)},6000);auto=true;document.getElementById('nav-play').textContent='⏯'}
+    function stopAuto(){if(autoTimer)clearInterval(autoTimer);auto=false;document.getElementById('nav-play').textContent='▶'}
+    // toggle
+    document.getElementById('nav-play').addEventListener('click',()=>{if(auto)stopAuto();else startAuto();});
+
+    // initial start
+    startAuto();
+
+    // visible slide index helper
+    function visibleIndex(){const top = scroller.scrollTop;let idx = 1;slides.forEach((s,i)=>{if(s.offsetTop<=top+10) idx=i+1});return idx}
+
+    /* ---------------- Bottom mute music ---------------- */
+    const muteBtn = document.getElementById('nav-mute');
+    let muted = true; audio.muted = muted; muteBtn.textContent = '🔈';
+    muteBtn.addEventListener('click',()=>{muted=!muted;audio.muted=muted;muteBtn.textContent = muted? '🔈':'🔊'});
+
+    /* ---------------- Copy rekening ---------------- */
+    document.getElementById('copy-rek').addEventListener('click',()=>{const text = document.getElementById('rek').textContent; navigator.clipboard?.writeText(text).then(()=>alert('No. rekening disalin'))});
+
+    /* ---------------- Guest messages (local only) ---------------- */
+    const guestList = document.getElementById('guest-list');
+    document.getElementById('add-guest').addEventListener('click',()=>{
+      const val = document.getElementById('guest-input').value.trim(); if(!val) return;const d=document.createElement('div');d.className='guest-item';d.textContent=val;guestList.prepend(d);document.getElementById('guest-input').value='';
+    });
+    document.getElementById('clear-guest').addEventListener('click',()=>{guestList.innerHTML='';});
+
+    /* ---------------- Snow effect (canvas) ---------------- */
+    const canvas = document.getElementById('snow');const ctx = canvas.getContext('2d');let W=canvas.width=innerWidth, H=canvas.height=innerHeight;window.addEventListener('resize',()=>{W=canvas.width=innerWidth;H=canvas.height=innerHeight;});
+    const flakes = [];for(let i=0;i<160;i++){flakes.push({x:Math.random()*W,y:Math.random()*H,r:Math.random()*3+1, d:Math.random()*1, s:Math.random()*0.5+0.2})}
+    function drawSnow(){ctx.clearRect(0,0,W,H);ctx.fillStyle='rgba(255,255,255,0.9)';for(let f of flakes){ctx.beginPath();ctx.arc(f.x,f.y,f.r,0,Math.PI*2);ctx.fill();f.y+=f.s+Math.sin(f.d);f.x+=Math.sin(f.d/2); if(f.y>H){f.y= -10;f.x=Math.random()*W}}requestAnimationFrame(drawSnow)}
+    drawSnow();
+
+    /* ---------------- Responsive tweaks for mobile: ensure scroll snaps to slides after touchend ---------------- */
+    let touchTimer=null;scroller.addEventListener('touchend',()=>{clearTimeout(touchTimer);touchTimer=setTimeout(()=>{const idx=visibleIndex();goToSlide(idx)},150)});
+
+    /* ---------------- Bird video tiny mute toggle if tapped ---------------- */
+    const bird = document.querySelector('video.bird');bird.addEventListener('click',()=>{bird.muted=!bird.muted});
+
+    /* ---------------- Prevent body scroll on long press mobile when using our scroller ---------------- */
+    document.body.addEventListener('touchmove', (e)=>{if(e.target.closest('.scroller')) e.preventDefault();},{passive:false});
+
+    /* ---------------- Helper to pause all animations when user navigates away ---------------- */
+    document.addEventListener('visibilitychange',()=>{ if(document.hidden){audio.pause()} else { if(!muted) audio.play().catch(()=>{}) }});
+
+    // expose goToSlide as global for dev
+    window.goToSlide = goToSlide;
+
+  </script>
+</body>
+</html>
