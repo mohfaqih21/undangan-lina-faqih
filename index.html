@@ -1,243 +1,559 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="id">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Undangan Lina & Faqih</title>
-  <style>
-    body {
-      margin: 0;
-      font-family: 'Poppins', sans-serif;
-      overflow-x: hidden;
-      background: #fff;
-    }
-    section {
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      position: relative;
-      padding: 20px;
-    }
-    img, video {
-      max-width: 100%;
-      height: auto;
-    }
-    .countdown {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 10px;
-      margin-top: 20px;
-    }
-    .time-box {
-      background: rgba(255,255,255,0.8);
-      border-radius: 12px;
-      padding: 10px;
-    }
-    .time-box span {
-      display: block;
-    }
-    @media (max-width: 768px) {
-      .countdown {
-        grid-template-columns: repeat(2, 1fr);
-      }
-      h1, h2, h3, h4, p {
-        font-size: 90%;
-      }
-    }
-    @media (max-width: 480px) {
-      .countdown {
-        grid-template-columns: 1fr 1fr;
-      }
-      h1, h2, h3, h4, p {
-        font-size: 80%;
-      }
-    }
-    /* tombol navigasi */
-    .controls {
-      position: fixed;
-      bottom: 10px;
-      left: 50%;
-      transform: translateX(-50%);
-      display: flex;
-      gap: 10px;
-      z-index: 1000;
-    }
-    .controls button {
-      border: none;
-      border-radius: 50%;
-      padding: 10px;
-      background: rgba(0,0,0,0.5);
-      color: #fff;
-      cursor: pointer;
-    }
-    /* efek salju */
-    #snow-canvas {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      pointer-events: none;
-      z-index: 500;
-    }
-  </style>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Undangan Lina & Faqih</title>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:wght@400;700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --accent:#2b6cb0;
+    --muted:#f3f3f3;
+    --glass: rgba(255,255,255,0.08);
+    --card-bg: rgba(255,255,255,0.85);
+    --radius:16px;
+    --w: 100vw;
+    --h: 100vh;
+    --text: #222;
+  }
+  html,body{height:100%;margin:0;font-family:Poppins,system-ui,Arial;background:#fff;color:var(--text);-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;overflow-y:auto;scroll-behavior:smooth;}
+  /* full-page vertical slides */
+  .slides { width:100%; max-width:900px; margin:0 auto; }
+  section.slide{
+    min-height:100vh;
+    position:relative;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:32px;
+    box-sizing:border-box;
+    overflow:hidden;
+  }
+
+  /* common overlay images (top-right and bottom-left) */
+  .corner-img{position:absolute;width:80px;height:80px;object-fit:contain;z-index:30;pointer-events:none}
+  .corner-top-right{top:18px;right:18px}
+  .corner-bottom-left{bottom:18px;left:18px}
+
+  /* 1. Intro overlay (must click open) */
+  #intro{
+    background:linear-gradient(180deg, rgba(0,0,0,0.45), rgba(0,0,0,0.35));
+    color:white;
+    text-align:center;
+  }
+  #intro .bg {
+    position:absolute;inset:0;background-image:url('bgistana.jpg');background-size:cover;background-position:center;opacity:0.97;
+    z-index:0;filter:brightness(0.7);
+  }
+  #intro .glass {
+    position:relative;z-index:10;max-width:720px;margin:0 auto;padding:48px;border-radius:12px;
+    backdrop-filter: blur(4px);
+  }
+  #intro .photo{
+    width:220px;height:220px;border-radius:12px;object-fit:cover;margin:0 auto;box-shadow:0 10px 30px rgba(0,0,0,0.45);
+  }
+  #intro h1{font-family:'Great Vibes', serif;font-size:46px;margin:10px 0;color:#bddcff}
+  #intro p{font-size:18px;line-height:1.6;margin:12px 0}
+  #intro .toName{font-weight:600;font-size:20px;margin-top:18px}
+  .open-btn{
+    display:inline-flex;align-items:center;gap:10px;padding:12px 18px;border-radius:28px;background:rgba(255,255,255,0.95);color:#0b3a66;font-weight:700;border:none;cursor:pointer;font-size:16px;
+    box-shadow:0 6px 18px rgba(0,0,0,0.2);margin-top:18px;
+  }
+  .open-btn svg{width:20px;height:20px}
+
+  /* 2. Happy wedding slide */
+  #happy {
+    background: url('suasana.jpg') center/cover no-repeat;
+    color:#07345a;
+    display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding-top:40px;
+  }
+  #happy .wrap{position:relative;width:100%;max-width:820px;text-align:center}
+  #happy h2{font-family:'Great Vibes';font-size:56px;margin:6px 0;color:var(--accent)}
+  #happy .hero-photo{width:240px;height:420px;object-fit:cover;margin:0 auto;border-radius:12px;position:relative;z-index:3;box-shadow:0 20px 50px rgba(0,0,0,0.45)}
+  #happy .back-istan {position:absolute;left:50%;transform:translateX(-50%);top:90px;width:420px;height:420px;background:url('istana.png') center/contain no-repeat;opacity:0.18;z-index:1;pointer-events:none}
+  #happy .pilar-left{position:absolute;left:0;top:40px;width:120px;height:360px;background:url('pilar.png') center/contain no-repeat;opacity:0.9;z-index:2}
+  #happy .pilar-right{position:absolute;right:0;top:40px;width:120px;height:360px;background:url('pilar.png') center/contain no-repeat;opacity:0.9;transform:scaleX(-1);z-index:2}
+  #happy .names{font-family:'Playfair Display';font-size:34px;margin-top:10px}
+  /* countdown */
+  .countdown{display:flex;gap:14px;justify-content:center;margin-top:20px;z-index:4;flex-wrap:wrap}
+  .cd-box{background:var(--card-bg);padding:12px 16px;border-radius:12px;min-width:88px;text-align:center;box-shadow:0 8px 26px rgba(0,0,0,0.18)}
+  .cd-box .number{font-size:28px;font-weight:700}
+  .cd-box .label{font-size:12px;color:#444;margin-top:6px}
+  .savecal{display:inline-block;margin-top:14px;padding:8px 14px;border-radius:10px;background:var(--accent);color:white;text-decoration:none;font-weight:600}
+  /* burung kecil */
+  .bird{
+    position:absolute;top:18vh;left:68%;width:120px;height:60px;z-index:50;pointer-events:none;filter:drop-shadow(0 6px 18px rgba(0,0,0,0.35));
+  }
+
+  /* 3. Details with bg2 */
+  #details{
+    background:url('bg2.png') center/cover no-repeat;
+    color:#0e2440;padding:48px 24px;display:flex;flex-direction:column;gap:18px;align-items:center;
+  }
+  .person-row{display:flex;gap:18px;align-items:center;max-width:860px;width:100%;justify-content:center}
+  .person{display:flex;gap:12px;align-items:center;background:rgba(255,255,255,0.9);padding:12px;border-radius:14px;box-shadow:0 10px 30px rgba(0,0,0,0.12);min-width:320px}
+  .person img{width:110px;height:110px;object-fit:cover;border-radius:12px;box-shadow:0 10px 20px rgba(0,0,0,0.16)}
+  .person .meta{display:flex;flex-direction:column}
+  .person .meta .name{font-family:'Playfair Display';font-size:20px}
+  .person .meta .info{font-size:13px;color:#333;margin-top:6px}
+  .ampersand{font-family:'Great Vibes';font-size:56px;margin:8px 0;color:var(--accent)}
+
+  /* 4. Ayat slide */
+  #ayat{
+    background:linear-gradient(180deg, rgba(250,250,250,0.9), rgba(255,255,255,0.95));
+    color:#07203a;padding:48px;display:flex;align-items:center;justify-content:center;flex-direction:column;background-image:url('bgistana2.jpg');background-size:cover;background-position:center;
+  }
+  .ayat-box{background:rgba(255,255,255,0.85);padding:24px;border-radius:14px;max-width:760px;box-shadow:0 12px 30px rgba(0,0,0,0.12);text-align:center}
+  .ayat-box .arab{font-size:30px;font-family:'Times New Roman',serif;direction:rtl}
+  .ayat-box .trans{margin-top:12px;font-size:16px;color:#333}
+
+  /* 5. Save the date box on white */
+  #savedate{background:white;padding:48px;display:flex;align-items:center;justify-content:center}
+  .sd-card{background:linear-gradient(180deg,#fff,#fafafa);padding:24px;border-radius:14px;min-width:320px;box-shadow:0 10px 30px rgba(0,0,0,0.06)}
+  .sd-card h3{margin:0;font-family:'Playfair Display';font-size:22px;color:var(--accent)}
+  .sd-info{margin-top:10px;display:flex;flex-direction:column;gap:10px}
+  .sd-row{padding:10px;border-radius:10px;background:linear-gradient(90deg,#ffffff,#f7fbff);font-weight:600}
+
+  .map-link{display:inline-block;margin-top:8px;padding:8px 12px;border-radius:8px;background:#e6f2ff;text-decoration:none;color:#06407a}
+
+  /* 6. Titip Hadiah */
+  #hadiah{background:url('bg2.png') center/cover no-repeat;padding:48px;display:flex;align-items:center;justify-content:center}
+  .hadiah-card{background:rgba(255,255,255,0.95);padding:20px;border-radius:14px;max-width:720px;text-align:left;box-shadow:0 12px 30px rgba(0,0,0,0.12)}
+  .rekening{display:flex;gap:8px;align-items:center;margin-top:10px}
+  .rekening input{border:none;background:transparent;font-weight:700;font-size:16px}
+  .copy-btn{padding:6px 10px;border-radius:10px;border:none;background:var(--accent);color:white;cursor:pointer}
+
+  /* 7. Ucapan tamu */
+  #ucapan{background:white;padding:48px;display:flex;align-items:center;justify-content:center}
+  .guest-card{max-width:720px;width:100%;background:linear-gradient(180deg,#fff,#fbfbff);padding:18px;border-radius:12px;box-shadow:0 10px 26px rgba(0,0,0,0.08)}
+  .guest-list{margin-top:12px;max-height:240px;overflow:auto;padding:8px;display:flex;flex-direction:column;gap:8px}
+  .guest-item{padding:8px;border-radius:8px;background:#fff;box-shadow:0 6px 10px rgba(0,0,0,0.03)}
+
+  /* 8. Closing slide */
+  #closing{background:url('bgistana.jpg') center/cover no-repeat;color:white;padding:48px;display:flex;align-items:center;justify-content:center}
+  #closing .thanks{background:linear-gradient(180deg,rgba(255,255,255,0.9),rgba(255,255,255,0.9));padding:18px;border-radius:12px;text-align:center;color:#07203a;max-width:720px}
+  #closing .photo{width:220px;height:220px;border-radius:12px;object-fit:cover;display:block;margin:0 auto 12px}
+
+  /* bottom controls & nav */
+  .bottom-controls{position:fixed;left:50%;transform:translateX(-50%);bottom:12px;background:rgba(255,255,255,0.9);padding:8px 12px;border-radius:24px;display:flex;gap:8px;align-items:center;box-shadow:0 8px 20px rgba(0,0,0,0.12);z-index:60}
+  .icon-btn{width:44px;height:44px;border-radius:10px;border:none;background:var(--glass);display:inline-flex;align-items:center;justify-content:center;cursor:pointer}
+  .nav-mini{display:flex;gap:6px;align-items:center}
+  .nav-mini button{width:40px;height:40px;border-radius:8px;border:none;background:rgba(255,255,255,0.9);cursor:pointer;font-weight:600}
+
+  /* snow effect */
+  .snow {position:fixed;inset:0;pointer-events:none;z-index:55}
+  .snow i{position:absolute;top:-10vh;width:6px;height:6px;background:white;border-radius:50%;opacity:0.8;animation:fall linear infinite}
+  @keyframes fall{to{transform:translateY(120vh);opacity:0.2}}
+  /* some variants */
+  .small{width:4px;height:4px}
+  .big{width:10px;height:10px}
+  /* reveal animations */
+  .reveal{opacity:0;transform:translateY(18px);transition:all 700ms cubic-bezier(.2,.9,.2,1)}
+  .reveal.visible{opacity:1;transform:none}
+
+  /* responsiveness */
+  @media(max-width:720px){
+    #intro .photo{width:150px;height:150px}
+    #happy h2{font-size:40px}
+    .cd-box{min-width:72px;padding:10px}
+    .bird{display:none}
+    .corner-img{width:56px;height:56px}
+    .person{flex-direction:row}
+    .person img{width:96px;height:96px}
+    .bottom-controls{left:12px;transform:none}
+  }
+
+</style>
 </head>
 <body>
-  <canvas id="snow-canvas"></canvas>
-  
-  <!-- Slide 1 -->
-  <section id="slide1" style="background:url('bgistana.jpg') no-repeat center/cover;">
-    <img src="pasangan.png" alt="Pasangan">
-    <h1 style="color:blue; font-family:'Great Vibes', cursive;">Lina & Faqih</h1>
-    <p>Tanpa Mengurangi Rasa Hormat, Kami Mengundang Bapak/Ibu/Saudara/i untuk Hadir di Acara Kami</p>
-    <p>Kepada: <span id="guest-name">Tamu Undangan</span></p>
-    <button onclick="openInvitation()">📩 Buka Undangan</button>
-  </section>
 
-  <!-- Slide 2 -->
-  <section id="slide2" style="background:url('suasana.jpg') no-repeat center/cover;">
-    <h1 style="font-family:'Great Vibes', cursive;">Happy Wedding</h1>
-    <div style="position:relative;">
-      <img src="istana.png" class="bg">
-      <img src="pilar.png" style="position:absolute; left:0; top:0; height:100%;">
-      <img src="pilar.png" style="position:absolute; right:0; top:0; height:100%;">
-      <img src="pasangantbg.png" alt="Pasangan" style="position:relative; z-index:2;">
+<!-- audio (will play only when user clicks open) -->
+<audio id="weddingAudio" src="lagu.mp3" preload="auto"></audio>
+
+<!-- small bird video (hidden until open) -->
+<video id="birdVideo" class="bird" src="burung.mp4" playsinline loop muted style="display:none;"></video>
+
+<!-- snow container -->
+<div class="snow" id="snow"></div>
+
+<!-- slides container -->
+<div class="slides" id="slidesWrap">
+
+  <!-- 1. Intro: clickable, blocks scroll until opened -->
+  <section id="intro" class="slide" aria-label="Buka Undangan">
+    <div class="bg" aria-hidden="true"></div>
+
+    <img src="list1.png" class="corner-img corner-top-right" alt="" />
+    <img src="list2.png" class="corner-img corner-bottom-left" alt="" />
+
+    <div class="glass">
+      <img src="pasangan.png" alt="Pasangan" class="photo reveal" id="introPhoto">
+      <h1 class="reveal">Lina &amp; Faqih</h1>
+      <p class="reveal">Tanpa Mengurangi Rasa Hormat, Kami Mengundang Bapak/Ibu/Saudara/I untuk Hadir di Acara Kami</p>
+      <div class="toName reveal">Kepada : <span id="toNameText">Tamu Undangan</span></div>
+
+      <div style="margin-top:22px">
+        <button class="open-btn" id="openBtn" title="Buka Undangan">
+          <!-- envelope icon -->
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 8l9 6 9-6" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><rect x="2" y="4" width="20" height="16" rx="2" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span> Buka Undangan</span>
+        </button>
+      </div>
+      <p style="font-size:12px;margin-top:8px;color:rgba(255,255,255,0.8)">Klik "Buka Undangan" untuk mulai undangan & memutar lagu.</p>
     </div>
-    <h2>Faqih & Lina</h2>
-    <div class="countdown" id="countdown"></div>
-    <a href="data:text/calendar;charset=utf8,BEGIN:VCALENDAR..." download="undangan.ics">Save to Calendar</a>
-    <video src="burung.mp4" autoplay loop muted style="width:60px; position:absolute; top:20px; right:20px;"></video>
   </section>
 
-  <!-- Slide 3 (pengantar keluarga) -->
-  <section id="slide3" style="background:url('bg2.png') no-repeat center/cover;">
-    <h2>بسم الله الرحمن الرحيم</h2>
-    <p>Atas Rahmat Allah SWT, Kami bermaksud mengundang Anda di acara Kami...</p>
-    <!-- Foto Lina -->
-    <div style="display:flex; flex-wrap:wrap; align-items:center; justify-content:center;">
-      <img src="lina.jpg" style="border-radius:12px; box-shadow:0 4px 6px rgba(0,0,0,0.2); max-width:200px; margin:10px;">
-      <div>
-        <h3>Marlina</h3>
-        <p>Putri dari Bapak Lina & Ummi Lina<br>Bogor</p>
+  <!-- 2. Happy wedding with countdown -->
+  <section id="happy" class="slide" aria-label="Happy Wedding">
+    <div class="back-istan" aria-hidden="true"></div>
+    <div class="pilar-left" aria-hidden="true"></div>
+    <div class="pilar-right" aria-hidden="true"></div>
+    <div class="wrap">
+      <h2 class="reveal">Happy Wedding</h2>
+      <img src="pasangantbg.png" alt="Pasangan" class="hero-photo reveal" />
+      <div class="names reveal">Faqih &amp; Lina</div>
+
+      <!-- countdown -->
+      <div class="countdown" id="countdown">
+        <div class="cd-box reveal"><div class="number" id="cd-days">0</div><div class="label">Days</div></div>
+        <div class="cd-box reveal"><div class="number" id="cd-hours">0</div><div class="label">Hours</div></div>
+        <div class="cd-box reveal"><div class="number" id="cd-mins">0</div><div class="label">Minutes</div></div>
+        <div class="cd-box reveal"><div class="number" id="cd-secs">0</div><div class="label">Seconds</div></div>
+      </div>
+
+      <a class="savecal reveal" id="saveCal" href="#" title="Save to calendar">Save to Calendar</a>
+    </div>
+  </section>
+
+  <!-- 3. Detail pasangan -->
+  <section id="details" class="slide" aria-label="Detail Pasangan">
+    <div class="person-row">
+      <div class="person reveal" id="linaCard">
+        <img src="lina.jpg" alt="Marlina">
+        <div class="meta">
+          <div class="name">Marlina</div>
+          <div class="info">Putri dari Bapak Lina &amp; Ummi Lina<br/>Beralamat di Bogor</div>
+        </div>
+      </div>
+
+      <div class="ampersand reveal">&amp;</div>
+
+      <div class="person reveal" id="faqihCard">
+        <img src="faqih.jpg" alt="Muhammad Faqih">
+        <div class="meta">
+          <div class="name">Muhammad Faqih</div>
+          <div class="info">Putra dari Abi Faqih &amp; Mama Faqih<br/>Beralamat di Jakarta</div>
+        </div>
       </div>
     </div>
-    <h1>&amp;</h1>
-    <!-- Foto Faqih -->
-    <div style="display:flex; flex-wrap:wrap; align-items:center; justify-content:center;">
-      <div>
-        <h3>Muhammad Faqih</h3>
-        <p>Putra dari Abi Faqih & Mama Faqih<br>Jakarta</p>
-      </div>
-      <img src="faqih.jpg" style="border-radius:12px; box-shadow:0 4px 6px rgba(0,0,0,0.2); max-width:200px; margin:10px;">
+  </section>
+
+  <!-- 4. Ayat -->
+  <section id="ayat" class="slide" aria-label="Ayat">
+    <div class="corner-img corner-top-right" style="opacity:0.9"><img src="list1.png" alt=""></div>
+    <div class="corner-img corner-bottom-left" style="opacity:0.9"><img src="list2.png" alt=""></div>
+
+    <div class="ayat-box reveal">
+      <div style="font-size:14px;color:#444;margin-bottom:8px">QS. Ar-Rum : 21</div>
+      <div class="arab" dir="rtl">وَمِنْ آيَاتِهِ أَنْ خَلَقَ لَكُم مِّنْ أَنفُسِكُمْ أَزْوَاجًا لِّتَسْكُنُوا إِلَيْهَا</div>
+      <div class="trans">Dan di antara tanda-tanda (kebesaran)-Nya ialah Dia menciptakan untukmu istri-istri dari jenismu sendiri, supaya kamu cenderung dan merasa tenteram kepadanya... (Ar-Rum:21)</div>
     </div>
   </section>
 
-  <!-- Slide 4 ayat -->
-  <section id="slide4" style="background:url('bgistana2.jpg') no-repeat center/cover;">
-    <h2>Ar-Rum:21</h2>
-    <p>وَمِنْ آيَاتِهِ أَنْ خَلَقَ لَكُم مِّنْ أَنفُسِكُمْ ...</p>
-    <p>Dan di antara tanda-tanda kekuasaan-Nya ialah Dia menciptakan untukmu pasangan hidup...</p>
+  <!-- 5. Save the date -->
+  <section id="savedate" class="slide" aria-label="Save The Date">
+    <div class="sd-card reveal">
+      <h3>Save The Date</h3>
+      <div class="sd-info">
+        <div class="sd-row">Akad &amp; Resepsi Pernikahan</div>
+        <div class="sd-row">Desember</div>
+        <div class="sd-row">Minggu | 14 | 2025</div>
+        <div class="sd-row">Rumah Lina</div>
+        <a class="map-link" href="https://maps.app.goo.gl/UWhk7CUqkBS6rZ3Z9" target="_blank" rel="noopener">Buka Map Lokasi</a>
+      </div>
+    </div>
   </section>
 
-  <!-- Slide 5 Save The Date -->
-  <section id="slide5">
-    <h2>Save The Date</h2>
-    <p>Akad & Resepsi Pernikahan</p>
-    <p>Minggu, 14 Desember 2025</p>
-    <p>Rumah Lina</p>
-    <a href="https://maps.app.goo.gl/UWhk7CUqkBS6rZ3Z9" target="_blank">📍 Lihat Lokasi</a>
+  <!-- 6. Titip Hadiah -->
+  <section id="hadiah" class="slide" aria-label="Titip Hadiah">
+    <div class="hadiah-card reveal">
+      <h3 style="font-family:'Playfair Display';margin:0 0 6px 0">Titip Hadiah</h3>
+      <p>Doa restu Bapak/Ibu sekalian merupakan karunia yang sangat berarti bagi kami. Dan jika memberi merupakan ungkapan tanda kasih, Bapak/Ibu dapat memberi kado secara cashless. Terima kasih.</p>
+
+      <div style="display:flex;gap:8px;align-items:center;margin-top:10px;flex-wrap:wrap;">
+        <div style="font-size:12px;color:#555">Rekening a.n Marlina</div>
+        <div class="rekening" style="background:#fff;padding:8px;border-radius:10px">
+          <input id="rekeningText" readonly value="Bank ABC • 1234 5678 9012">
+          <button class="copy-btn" id="copyRek">Copy</button>
+        </div>
+      </div>
+    </div>
   </section>
 
-  <!-- Slide 6 Hadiah -->
-  <section id="slide6" style="background:url('bg2.png') no-repeat center/cover;">
-    <h2>Titip Hadiah</h2>
-    <p>Doa restu merupakan karunia yang sangat berarti...</p>
-    <p>Rekening a.n. Lina & Faqih</p>
-    <button onclick="copyRek()">Copy Rekening</button>
+  <!-- 7. Ucapan tamu -->
+  <section id="ucapan" class="slide" aria-label="Ucapan">
+    <div class="guest-card reveal">
+      <div style="display:flex;gap:8px;align-items:center">
+        <input id="guestName" placeholder="Nama (Bapak/Ibu)" style="flex:1;padding:10px;border-radius:8px;border:1px solid #e1e7ef"/>
+        <button id="postGuest" class="copy-btn">Kirim Ucapan</button>
+      </div>
+      <textarea id="guestMsg" placeholder="Tulis ucapanmu..." style="width:100%;margin-top:8px;padding:10px;border-radius:8px;border:1px solid #e1e7ef;min-height:80px"></textarea>
+      <div class="guest-list" id="guestList"></div>
+    </div>
   </section>
 
-  <!-- Slide 7 Ucapan -->
-  <section id="slide7">
-    <h2>Kirim Ucapan</h2>
-    <form>
-      <textarea placeholder="Tulis ucapan..." style="width:100%; height:80px;"></textarea>
-      <br>
-      <button type="submit">Kirim</button>
-    </form>
+  <!-- 8. Closing slide -->
+  <section id="closing" class="slide" aria-label="Penutup">
+    <img src="pasangan.png" class="photo" alt="Pasangan">
+    <div class="thanks reveal">
+      <h2 style="font-family:'Great Vibes',serif;font-size:36px;margin:0;color:#07345a">Lina &amp; Faqih</h2>
+      <p style="margin-top:8px;font-weight:600">Terima kasih</p>
+    </div>
   </section>
 
-  <!-- Slide 8 penutup -->
-  <section id="slide8" style="background:url('bgistana.jpg') no-repeat center/cover;">
-    <img src="pasangan.png" alt="Pasangan">
-    <h1 style="color:blue; font-family:'Great Vibes', cursive;">Lina & Faqih</h1>
-    <h2>Terima kasih</h2>
-  </section>
+</div>
 
-  <!-- Kontrol -->
-  <div class="controls">
-    <button onclick="toggleScroll()">⏯</button>
-    <button onclick="toggleMusic()">🔇</button>
+<!-- bottom controls -->
+<div class="bottom-controls" role="toolbar" aria-label="Kontrol Undangan">
+  <div class="nav-mini" aria-hidden="false">
+    <button title="Intro" data-target="intro">🏠</button>
+    <button title="Happy" data-target="happy">💍</button>
+    <button title="Detail" data-target="details">👰‍♀️</button>
+    <button title="Ayat" data-target="ayat">📖</button>
+    <button title="SaveDate" data-target="savedate">📅</button>
+    <button title="Titip Hadiah" data-target="hadiah">🎁</button>
+    <button title="Ucapan" data-target="ucapan">💬</button>
+    <button title="Penutup" data-target="closing">✨</button>
   </div>
+  <div style="width:8px"></div>
+  <button class="icon-btn" id="toggleAuto" title="Hentikan Auto-scroll">⏸</button>
+  <button class="icon-btn" id="muteBtn" title="Mute / Unmute Musik">🔊</button>
+</div>
 
-  <audio id="bg-music" src="lagu.mp3" loop></audio>
+<script>
+/* ======= Utilities ======= */
+// get query param ?to=Bapak%20Budi
+function getQueryParam(name){const u=new URL(location.href);return u.searchParams.get(name)}
 
-  <script>
-    // Nama dari URL
-    const urlParams = new URLSearchParams(window.location.search);
-    const guest = urlParams.get('to');
-    if(guest) document.getElementById('guest-name').innerText = guest;
+/* ======= Initial name from URL ======= */
+const toName = getQueryParam('to') || 'Tamu Undangan';
+document.getElementById('toNameText').textContent = toName;
 
-    // Countdown
-    const targetDate = new Date('Dec 14, 2025 08:00:00').getTime();
-    setInterval(() => {
-      const now = new Date().getTime();
-      const diff = targetDate - now;
-      const d = Math.floor(diff/(1000*60*60*24));
-      const h = Math.floor((diff%(1000*60*60*24))/(1000*60*60));
-      const m = Math.floor((diff%(1000*60*60))/(1000*60));
-      const s = Math.floor((diff%(1000*60))/1000);
-      document.getElementById('countdown').innerHTML = `
-        <div class="time-box"><span>${d}</span><span>Days</span></div>
-        <div class="time-box"><span>${h}</span><span>Hours</span></div>
-        <div class="time-box"><span>${m}</span><span>Minutes</span></div>
-        <div class="time-box"><span>${s}</span><span>Seconds</span></div>`;
-    },1000);
+/* ======= Elements ======= */
+const openBtn = document.getElementById('openBtn');
+const audio = document.getElementById('weddingAudio');
+const birdVideo = document.getElementById('birdVideo');
+const slidesWrap = document.getElementById('slidesWrap');
+const slideSections = document.querySelectorAll('section.slide');
+const bottomControls = document.querySelector('.bottom-controls');
+const snowContainer = document.getElementById('snow');
 
-    // Auto scroll
-    let scrolling = true;
-    function autoScroll(){
-      if(scrolling) window.scrollBy(0,1);
+let autoScroll = true;
+let autoScrollTimer = null;
+
+/* ======= Initial blocking: prevent scrolling until opened ======= */
+document.documentElement.style.overflow = 'hidden';
+document.body.style.overflow = 'hidden';
+let opened = false;
+
+/* reveal animation when element intersects */
+const io = new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){ e.target.classList.add('visible'); }
+  })
+},{threshold:0.2});
+document.querySelectorAll('.reveal').forEach(el=> io.observe(el));
+
+/* snow generation */
+function makeSnow(count=36){
+  for(let i=0;i<count;i++){
+    const el = document.createElement('i');
+    el.style.left = Math.random()*100 + 'vw';
+    el.style.animationDuration = 6 + Math.random()*18 + 's';
+    el.style.opacity = Math.random()*0.9;
+    el.style.transform = 'translateY(-10vh)';
+    if(Math.random()>0.85) el.classList.add('big'); else if(Math.random()>0.6) el.classList.add('small');
+    snowContainer.appendChild(el);
+  }
+}
+makeSnow(36);
+
+/* ======= Open handler: enable interaction, start audio & bird, start auto-scroll ======= */
+openBtn.addEventListener('click', async ()=>{
+  if(opened) return;
+  opened = true;
+
+  // allow scroll
+  document.documentElement.style.overflow = '';
+  document.body.style.overflow = '';
+
+  // start audio (user gesture)
+  try{ audio.currentTime = 0; await audio.play(); } catch(e){ console.warn('Audio play blocked', e); }
+  // show bird video
+  birdVideo.style.display = 'block'; birdVideo.muted = true;
+  try{ await birdVideo.play(); } catch(e){ console.warn('Bird video play blocked'); }
+
+  // fade out the intro overlay "glass" but keep section visible
+  document.getElementById('intro').style.pointerEvents = 'none';
+
+  // start auto-scroll slowly
+  startAutoScroll();
+});
+
+/* ======= Auto-scroll logic (slow vertical scroll down slide by slide) ======= */
+function startAutoScroll(){
+  if(autoScrollTimer) clearInterval(autoScrollTimer);
+  autoScroll = true;
+  document.getElementById('toggleAuto').textContent = '⏸';
+  let idx = 0;
+  autoScrollTimer = setInterval(()=>{
+    if(!autoScroll) return;
+    idx++;
+    if(idx >= slideSections.length) { idx = slideSections.length-1; stopAutoScroll(); return; }
+    slideSections[idx].scrollIntoView({behavior:'smooth',block:'start'});
+  }, 9000); // every 9s scroll to next
+}
+function stopAutoScroll(){
+  autoScroll = false;
+  if(autoScrollTimer) clearInterval(autoScrollTimer);
+  document.getElementById('toggleAuto').textContent = '▶';
+}
+document.getElementById('toggleAuto').addEventListener('click', ()=>{
+  autoScroll = !autoScroll;
+  if(autoScroll){ startAutoScroll(); } else { stopAutoScroll(); }
+});
+
+/* bottom nav buttons */
+document.querySelectorAll('.nav-mini button').forEach(btn=>{
+  btn.addEventListener('click', ()=> {
+    const t = btn.getAttribute('data-target');
+    const el = document.getElementById(t);
+    if(el){ el.scrollIntoView({behavior:'smooth',block:'start'}); stopAutoScroll(); }
+  });
+});
+
+/* mute button */
+const muteBtn = document.getElementById('muteBtn');
+muteBtn.addEventListener('click', ()=>{
+  if(audio.muted){ audio.muted=false; muteBtn.textContent='🔊' } else { audio.muted=true; muteBtn.textContent='🔇' }
+});
+
+/* ======= Countdown logic to 14 Dec 2025 08:00 WIB (UTC+7) ======= */
+const target = new Date('2025-12-14T01:00:00Z'); // 08:00 WIB is 01:00 UTC
+function updateCountdown(){
+  const now = new Date();
+  let diff = Math.max(0, Math.floor((target - now)/1000));
+  const days = Math.floor(diff / 86400); diff -= days*86400;
+  const hours = Math.floor(diff/3600); diff -= hours*3600;
+  const mins = Math.floor(diff/60); const secs = diff - mins*60;
+  document.getElementById('cd-days').textContent = days;
+  document.getElementById('cd-hours').textContent = hours;
+  document.getElementById('cd-mins').textContent = mins;
+  document.getElementById('cd-secs').textContent = secs;
+}
+updateCountdown();
+setInterval(updateCountdown, 1000);
+
+/* save to calendar link (generate .ics download) */
+document.getElementById('saveCal').addEventListener('click', (e)=>{
+  e.preventDefault();
+  const startUTC = target.toISOString().replace(/[-:]|\.\d{3}/g,'');
+  const end = new Date(target.getTime() + 3*60*60*1000); // 3 hours event
+  const endUTC = end.toISOString().replace(/[-:]|\.\d{3}/g,'');
+  const ics = [
+    'BEGIN:VCALENDAR',
+    'VERSION:2.0',
+    'PRODID:-//Undangan//LinaFaqih//ID',
+    'BEGIN:VEVENT',
+    `UID:${Date.now()}@undangan.local`,
+    `DTSTAMP:${startUTC}`,
+    `DTSTART:${startUTC}`,
+    `DTEND:${endUTC}`,
+    'SUMMARY:Akad & Resepsi Pernikahan Lina & Faqih',
+    'DESCRIPTION:Undangan pernikahan Lina & Faqih',
+    'LOCATION:Rumah Lina',
+    'END:VEVENT',
+    'END:VCALENDAR'
+  ].join('\\r\\n');
+  const blob = new Blob([ics], {type:'text/calendar'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a'); a.href = url; a.download = 'undangan_lina_faqih.ics'; a.click();
+  URL.revokeObjectURL(url);
+});
+
+/* ======= Copy rekening ======= */
+document.getElementById('copyRek').addEventListener('click', ()=>{
+  const textEl = document.getElementById('rekeningText');
+  navigator.clipboard.writeText(textEl.value).then(()=> {
+    alert('Nomor rekening disalin.');
+  }).catch(()=> alert('Gagal menyalin. Silakan salin manual.'));
+});
+
+/* ======= Ucapan tamu (client-side) ======= */
+const guestListEl = document.getElementById('guestList');
+const postGuestBtn = document.getElementById('postGuest');
+function loadGuests(){
+  const raw = localStorage.getItem('guestMsgs') || '[]';
+  const arr = JSON.parse(raw);
+  guestListEl.innerHTML = '';
+  arr.reverse().forEach(g=>{
+    const div = document.createElement('div'); div.className='guest-item';
+    div.innerHTML = `<strong>${escapeHtml(g.name)}</strong><div style="margin-top:6px">${escapeHtml(g.msg)}</div><div style="font-size:11px;color:#888;margin-top:6px">${new Date(g.time).toLocaleString('id-ID')}</div>`;
+    guestListEl.appendChild(div);
+  });
+}
+function escapeHtml(s){ return (''+s).replace(/[&<>"]/g,ch=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[ch])); }
+
+postGuestBtn.addEventListener('click', ()=>{
+  const name = document.getElementById('guestName').value.trim() || 'Tamu';
+  const msg = document.getElementById('guestMsg').value.trim();
+  if(!msg){ alert('Silakan tulis ucapannya terlebih dahulu.'); return; }
+  const raw = localStorage.getItem('guestMsgs') || '[]'; const arr = JSON.parse(raw);
+  arr.push({name,msg,time:Date.now()});
+  localStorage.setItem('guestMsgs', JSON.stringify(arr));
+  document.getElementById('guestMsg').value=''; document.getElementById('guestName').value='';
+  loadGuests();
+});
+loadGuests();
+
+/* ======= Reveal-only-when-visible: observe sections to add visible classes to contained reveal elements ======= */
+const secObserver = new IntersectionObserver((ents)=>{
+  ents.forEach(en=>{
+    if(en.isIntersecting){
+      en.target.querySelectorAll('.reveal').forEach((r, i)=> {
+        r.style.transitionDelay = (i*120)+'ms';
+        r.classList.add('visible');
+      });
     }
-    setInterval(autoScroll,50);
-    function toggleScroll(){ scrolling=!scrolling; }
+  });
+},{threshold:0.28});
+document.querySelectorAll('section.slide').forEach(s=> secObserver.observe(s));
 
-    // Music
-    const music=document.getElementById('bg-music');
-    function openInvitation(){ music.play(); }
-    function toggleMusic(){
-      if(music.muted){ music.muted=false; } else { music.muted=true; }
-    }
+/* ======= Prevent interaction with page before open: keep pointer-events blocked on all slides except intro open button (handled above) ======= */
+const allSections = Array.from(document.querySelectorAll('section.slide'));
+function setBlocked(blocked){
+  allSections.forEach(sec=>{
+    if(sec.id !== 'intro') sec.style.pointerEvents = blocked ? 'none' : '';
+  });
+}
+setBlocked(true); // initially blocked
+openBtn.addEventListener('click', ()=> setBlocked(false));
 
-    // Copy rekening
-    function copyRek(){
-      navigator.clipboard.writeText('1234567890 - Lina & Faqih');
-      alert('Rekening disalin!');
-    }
+/* ======= Small accessibility: keyboard open via Enter when focused on open button ======= */
+openBtn.addEventListener('keyup', (e)=>{ if(e.key==='Enter') openBtn.click() });
 
-    // Efek salju
-    const canvas=document.getElementById('snow-canvas');
-    const ctx=canvas.getContext('2d');
-    let snow=[];
-    function resize(){canvas.width=window.innerWidth;canvas.height=window.innerHeight;}
-    window.onresize=resize;resize();
-    for(let i=0;i<100;i++) snow.push({x:Math.random()*canvas.width,y:Math.random()*canvas.height,r:Math.random()*3+2,d:Math.random()+1});
-    function draw(){ctx.clearRect(0,0,canvas.width,canvas.height);ctx.fillStyle="white";ctx.beginPath();for(let i=0;i<snow.length;i++){let f=snow[i];ctx.moveTo(f.x,f.y);ctx.arc(f.x,f.y,f.r,0,Math.PI*2,true);}ctx.fill();update();}
-    let angle=0;
-    function update(){angle+=0.01;for(let i=0;i<snow.length;i++){let f=snow[i];f.y+=Math.pow(f.d,2)+1;f.x+=Math.sin(angle)*2;if(f.y>canvas.height){snow[i]={x:Math.random()*canvas.width,y:0,r:f.r,d:f.d};}}}
-    setInterval(draw,33);
-  </script>
+/* ======= Simple helper: when user manually scrolls, stop auto scroll ======= */
+let userScrollTimer = null;
+window.addEventListener('wheel', ()=> { stopAutoScroll(); });
+window.addEventListener('touchstart', ()=> { stopAutoScroll(); }, {passive:true});
+
+/* ======= Done ======= */
+
+/* Extra: graceful degrade if user opens on mobile — ensure font sizes */
+document.addEventListener('DOMContentLoaded', ()=> {
+  // show bird only after open -> handled earlier
+});
+</script>
 </body>
 </html>
