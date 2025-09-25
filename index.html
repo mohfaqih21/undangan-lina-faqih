@@ -1,375 +1,243 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Undangan Lina & Faqih — Digital</title>
-
-  <!-- Google Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Great+Vibes&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
-
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Undangan Lina & Faqih</title>
   <style>
-    /* ====== Reset & base ====== */
-    :root{
-      --accent:#2b6cb0; /* biru */
-      --muted:#f7f7fb;
-      --card: rgba(255,255,255,0.85);
-      --glass: rgba(255,255,255,0.06);
-      --radius:16px;
-      --safe-area: env(safe-area-inset-bottom);
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      overflow-x: hidden;
+      background: #fff;
     }
-    *{box-sizing:border-box}
-    html,body{height:100%;margin:0;font-family:Poppins,system-ui,Segoe UI,Roboto,Arial;background:#111;color:#111}
-
-    /* ====== Full-page vertical flow (slides stacked) ====== */
-    .viewport{
-      position:relative;overflow:auto;height:100vh;scroll-behavior:smooth;scroll-snap-type:y mandatory;
-      background:#000;
+    section {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      position: relative;
+      padding: 20px;
     }
-    .slide{
-      min-height:100vh;padding:32px;display:flex;align-items:center;justify-content:center;flex-direction:column;scroll-snap-align:start;position:relative;
+    img, video {
+      max-width: 100%;
+      height: auto;
     }
-
-    /* ====== common decorations ====== */
-    .frame-a4{width:800px;max-width:92%;background:transparent;padding:28px;border-radius:12px}
-    .top-right-badge{position:absolute;right:18px;top:18px;width:64px;height:64px}
-    .bottom-left-badge{position:absolute;left:18px;bottom:18px;width:64px;height:64px}
-
-    /* ====== Slide 1 (Cover / open) ====== */
-    .cover{background-image:url('bgistana.jpg');background-size:cover;background-position:center;}
-    .cover .card{background: linear-gradient(180deg, rgba(255,255,255,0.8), rgba(255,255,255,0.6));backdrop-filter:blur(6px);border-radius:18px;padding:28px;max-width:780px;text-align:center}
-    .couple-photo{width:220px;height:220px;border-radius:12px;object-fit:cover;display:inline-block}
-    .names{font-family:'Great Vibes',cursive;color:var(--accent);font-size:48px;margin-top:8px}
-    .inv-text{font-size:18px;margin:12px 0}
-    .to-line{font-weight:600;margin-top:20px}
-    .open-btn{display:inline-flex;align-items:center;gap:10px;margin-top:22px;padding:12px 18px;border-radius:999px;background:var(--accent);color:white;cursor:pointer}
-
-    /* envelope icon */
-    .envelope{width:36px;height:24px;position:relative}
-    .envelope::before{content:'';position:absolute;inset:0;border:2px solid #fff;border-radius:4px}
-    .envelope::after{content:'';position:absolute;left:50%;top:0;transform:translateX(-50%);width:0;height:0;border-left:12px solid transparent;border-right:12px solid transparent;border-bottom:10px solid #fff}
-
-    /* ====== Slide 2 (Happy Wedding + countdown) ====== */
-    .happy{background:linear-gradient(0deg, rgba(255,255,255,0.2), rgba(255,255,255,0.0));}
-    .happy .hero{position:relative;width:100%;max-width:1000px;border-radius:12px;overflow:visible;padding:24px;text-align:center}
-    .hero .happy-text{font-family:'Playfair Display',serif;font-size:48px}
-    .hero .center-photo{width:480px;max-width:86%;height:auto;margin:18px auto;display:block;position:relative}
-    .hero .castle{position:absolute;left:50%;transform:translateX(-50%);top:8%;width:100%;height:100%;pointer-events:none;opacity:0.25}
-    .pilar-left,.pilar-right{position:absolute;top:12%;width:120px;height:320px;pointer-events:none}
-    .pilar-left{left:6%}
-    .pilar-right{right:6%}
-
-    /* countdown boxes */
-    .countdown{display:flex;gap:12px;justify-content:center;margin-top:12px}
-    .cd-box{background:var(--card);padding:14px;border-radius:12px;min-width:84px}
-    .cd-num{font-size:26px;font-weight:700}
-    .cd-label{font-size:12px;margin-top:6px}
-
-    .save-cal{display:inline-block;margin-top:12px;padding:10px 14px;border-radius:10px;background:var(--muted);cursor:pointer}
-
-    /* burung (video) overlay */
-    .bird-overlay{position:absolute;top:4%;left:50%;transform:translateX(-50%);width:160px;height:80px;pointer-events:none;opacity:0.95}
-
-    /* ====== Slide 3 (Profile pairs) ====== */
-    .pair-bg{background-image:url('bg2.png');background-size:cover;background-position:center;padding-top:48px;padding-bottom:48px}
-    .pair-row{display:flex;gap:18px;align-items:center;justify-content:center;max-width:900px}
-    .person{display:flex;gap:12px;align-items:center;background:var(--card);padding:12px;border-radius:12px;box-shadow:0 6px 18px rgba(0,0,0,0.15)}
-    .person img{width:120px;height:120px;object-fit:cover;border-radius:12px}
-    .person .meta{font-size:16px}
-    .ampersand{font-family:'Great Vibes',cursive;font-size:84px;margin:14px 0}
-
-    /* ====== Slide 4 (Quran verse) ====== */
-    .quran{background-image:url('bgistana2.jpg');background-size:cover;background-position:center}
-    .quran .verse{background:rgba(255,255,255,0.8);padding:24px;border-radius:12px;max-width:780px;text-align:center}
-    .arab{font-size:28px;font-family:serif}
-    .terjemah{margin-top:8px}
-
-    /* ====== Slide 5 (Save the date & map) ====== */
-    .whiteboard{background:white;color:#111}
-    .whitebox{background:var(--card);padding:18px;border-radius:12px;max-width:520px;text-align:center}
-    .map-link{display:inline-block;margin-top:12px;padding:10px 12px;border-radius:10px;background:var(--muted)}
-
-    /* ====== Slide 6 (Titip Hadiah) ====== */
-    .gift{background-image:url('bg2.png');background-size:cover;padding:40px}
-    .account{background:rgba(255,255,255,0.9);padding:12px;border-radius:12px}
-    .copy-btn{margin-left:8px;padding:8px 10px;border-radius:8px;cursor:pointer}
-
-    /* ====== Slide 7 (Ucapan) ====== */
-    .greetings{min-height:60vh;padding:20px}
-    .greet-list{max-width:800px;width:92%;}
-    .greet-item{background:var(--card);padding:10px;border-radius:10px;margin-bottom:10px}
-
-    /* ====== Slide 8 (Closing) ====== */
-    .closing{background-image:url('bgistana.jpg');background-size:cover;}
-    .thanks-box{background:linear-gradient(180deg, rgba(255,255,255,0.9), rgba(255,255,255,0.7));padding:24px;border-radius:12px;text-align:center}
-
-    /* ====== Controls (bottom) ====== */
-    .controls{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(16px + var(--safe-area));display:flex;gap:12px;background:rgba(0,0,0,0.35);padding:8px;border-radius:999px;backdrop-filter:blur(6px);z-index:999}
-    .control-btn{background:rgba(255,255,255,0.06);padding:8px;border-radius:10px;color:white;cursor:pointer;display:flex;align-items:center;gap:8px}
-
-    /* small screens adjustments */
-    @media(max-width:600px){
-      .names{font-size:36px}
-      .hero .center-photo{width:320px}
-      .person img{width:96px;height:96px}
-      .ampersand{font-size:54px}
-      .frame-a4{padding:18px}
+    .countdown {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      margin-top: 20px;
+    }
+    .time-box {
+      background: rgba(255,255,255,0.8);
+      border-radius: 12px;
+      padding: 10px;
+    }
+    .time-box span {
+      display: block;
+    }
+    @media (max-width: 768px) {
+      .countdown {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      h1, h2, h3, h4, p {
+        font-size: 90%;
+      }
+    }
+    @media (max-width: 480px) {
+      .countdown {
+        grid-template-columns: 1fr 1fr;
+      }
+      h1, h2, h3, h4, p {
+        font-size: 80%;
+      }
+    }
+    /* tombol navigasi */
+    .controls {
+      position: fixed;
+      bottom: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 10px;
+      z-index: 1000;
+    }
+    .controls button {
+      border: none;
+      border-radius: 50%;
+      padding: 10px;
+      background: rgba(0,0,0,0.5);
+      color: #fff;
+      cursor: pointer;
+    }
+    /* efek salju */
+    #snow-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 500;
     }
   </style>
 </head>
 <body>
+  <canvas id="snow-canvas"></canvas>
+  
+  <!-- Slide 1 -->
+  <section id="slide1" style="background:url('bgistana.jpg') no-repeat center/cover;">
+    <img src="pasangan.png" alt="Pasangan">
+    <h1 style="color:blue; font-family:'Great Vibes', cursive;">Lina & Faqih</h1>
+    <p>Tanpa Mengurangi Rasa Hormat, Kami Mengundang Bapak/Ibu/Saudara/i untuk Hadir di Acara Kami</p>
+    <p>Kepada: <span id="guest-name">Tamu Undangan</span></p>
+    <button onclick="openInvitation()">📩 Buka Undangan</button>
+  </section>
 
-  <div class="viewport" id="viewport">
+  <!-- Slide 2 -->
+  <section id="slide2" style="background:url('suasana.jpg') no-repeat center/cover;">
+    <h1 style="font-family:'Great Vibes', cursive;">Happy Wedding</h1>
+    <div style="position:relative;">
+      <img src="istana.png" class="bg">
+      <img src="pilar.png" style="position:absolute; left:0; top:0; height:100%;">
+      <img src="pilar.png" style="position:absolute; right:0; top:0; height:100%;">
+      <img src="pasangantbg.png" alt="Pasangan" style="position:relative; z-index:2;">
+    </div>
+    <h2>Faqih & Lina</h2>
+    <div class="countdown" id="countdown"></div>
+    <a href="data:text/calendar;charset=utf8,BEGIN:VCALENDAR..." download="undangan.ics">Save to Calendar</a>
+    <video src="burung.mp4" autoplay loop muted style="width:60px; position:absolute; top:20px; right:20px;"></video>
+  </section>
 
-    <!-- SLIDE 1: Cover / Open -->
-    <section class="slide cover" id="slide-1">
-      <div class="frame-a4 card" style="animation:fadeIn 1s ease both">
-        <img src="pasangan.png" class="couple-photo" alt="Pasangan">
-        <div class="names">Lina &amp; Faqih</div>
-        <p class="inv-text">Tanpa Megurangi Rasa Hormat, Kami Mengundang Bapak/Ibu/Saudara/I untuk Hadir di Acara Kami</p>
-        <div class="to-line">Kepada: <span id="toName">Bapak/Ibu</span></div>
-
-        <div class="open-btn" id="openInvite">
-          <span class="envelope"></span>
-          <span>Buka Undangan</span>
-        </div>
-
+  <!-- Slide 3 (pengantar keluarga) -->
+  <section id="slide3" style="background:url('bg2.png') no-repeat center/cover;">
+    <h2>بسم الله الرحمن الرحيم</h2>
+    <p>Atas Rahmat Allah SWT, Kami bermaksud mengundang Anda di acara Kami...</p>
+    <!-- Foto Lina -->
+    <div style="display:flex; flex-wrap:wrap; align-items:center; justify-content:center;">
+      <img src="lina.jpg" style="border-radius:12px; box-shadow:0 4px 6px rgba(0,0,0,0.2); max-width:200px; margin:10px;">
+      <div>
+        <h3>Marlina</h3>
+        <p>Putri dari Bapak Lina & Ummi Lina<br>Bogor</p>
       </div>
-      <img class="top-right-badge" src="list1.png" alt="list1">
-      <img class="bottom-left-badge" src="list2.png" alt="list2">
-      <!-- audio element (hidden controls) -->
-      <audio id="bgMusic" src="lagu.mp3" loop></audio>
-    </section>
-
-    <!-- SLIDE 2: Happy Wedding + Countdown -->
-    <section class="slide happy" id="slide-2">
-      <div class="hero">
-        <div class="happy-text">Happy Wedding</div>
-        <img src="pasangantbg.png" class="center-photo" alt="Kami">
-        <img src="istana.png" class="castle" aria-hidden="true">
-        <img src="pilar.png" class="pilar-left" aria-hidden="true">
-        <img src="pilar.png" class="pilar-right" aria-hidden="true">
-
-        <div class="countdown" id="countdown">
-          <div class="cd-box"><div class="cd-num" id="cd-days">0</div><div class="cd-label">Days</div></div>
-          <div class="cd-box"><div class="cd-num" id="cd-hours">0</div><div class="cd-label">Hours</div></div>
-          <div class="cd-box"><div class="cd-num" id="cd-minutes">0</div><div class="cd-label">Minutes</div></div>
-          <div class="cd-box"><div class="cd-num" id="cd-seconds">0</div><div class="cd-label">Seconds</div></div>
-        </div>
-
-        <div class="save-cal" id="saveCal">Save to calendar</div>
-
-        <!-- small bird video overlay -->
-        <video class="bird-overlay" src="burung.mp4" autoplay loop muted playsinline></video>
+    </div>
+    <h1>&amp;</h1>
+    <!-- Foto Faqih -->
+    <div style="display:flex; flex-wrap:wrap; align-items:center; justify-content:center;">
+      <div>
+        <h3>Muhammad Faqih</h3>
+        <p>Putra dari Abi Faqih & Mama Faqih<br>Jakarta</p>
       </div>
-      <img class="top-right-badge" src="list1.png" alt="list1">
-      <img class="bottom-left-badge" src="list2.png" alt="list2">
-    </section>
+      <img src="faqih.jpg" style="border-radius:12px; box-shadow:0 4px 6px rgba(0,0,0,0.2); max-width:200px; margin:10px;">
+    </div>
+  </section>
 
-    <!-- SLIDE 3: Details pasangan -->
-    <section class="slide pair-bg" id="slide-3">
-      <div class="pair-row">
-        <div class="person" style="animation:slideInLeft 1s both">
-          <img src="lina.jpg" alt="Lina">
-          <div class="meta"><div style="font-family:'Great Vibes',cursive;font-size:22px">Marlina</div><div>Putri dari Bapak Lina &amp; Ummi Lina</div><div>Beralamat di Bogor</div></div>
-        </div>
+  <!-- Slide 4 ayat -->
+  <section id="slide4" style="background:url('bgistana2.jpg') no-repeat center/cover;">
+    <h2>Ar-Rum:21</h2>
+    <p>وَمِنْ آيَاتِهِ أَنْ خَلَقَ لَكُم مِّنْ أَنفُسِكُمْ ...</p>
+    <p>Dan di antara tanda-tanda kekuasaan-Nya ialah Dia menciptakan untukmu pasangan hidup...</p>
+  </section>
 
-        <div class="ampersand">&amp;</div>
+  <!-- Slide 5 Save The Date -->
+  <section id="slide5">
+    <h2>Save The Date</h2>
+    <p>Akad & Resepsi Pernikahan</p>
+    <p>Minggu, 14 Desember 2025</p>
+    <p>Rumah Lina</p>
+    <a href="https://maps.app.goo.gl/UWhk7CUqkBS6rZ3Z9" target="_blank">📍 Lihat Lokasi</a>
+  </section>
 
-        <div class="person" style="animation:slideInRight 1s both">
-          <img src="faqih.jpg" alt="Faqih">
-          <div class="meta"><div style="font-family:'Great Vibes',cursive;font-size:22px">Muhammad Faqih</div><div>Putra dari Abi Faqih &amp; Mama Faqih</div><div>Beralamat di Jakarta</div></div>
-        </div>
-      </div>
-    </section>
+  <!-- Slide 6 Hadiah -->
+  <section id="slide6" style="background:url('bg2.png') no-repeat center/cover;">
+    <h2>Titip Hadiah</h2>
+    <p>Doa restu merupakan karunia yang sangat berarti...</p>
+    <p>Rekening a.n. Lina & Faqih</p>
+    <button onclick="copyRek()">Copy Rekening</button>
+  </section>
 
-    <!-- SLIDE 4: Ayat -->
-    <section class="slide quran" id="slide-4">
-      <div class="verse">
-        <div class="arab">وَمِنْ ءَايَاتِهِ أَنْ خَلَقَ لَكُم مِّنْ أَنفُسِكُمْ أَزْوَٰجًا لِّتَسْكُنُوا۟ٓ إِلَيْهَا ۚ وَجَعَلَ بَيْنَكُم مَّوَدَّةًۭ وَرَحْمَةً ۚ إِنَّ فِى ذَٰلِكَ لَأَيَـِٔةًۭ لِّقَوْمٍۢ يَتَفَكَّرُونَ</div>
-        <div class="terjemah">Artinya: Dan di antara tanda-tanda (kebesaran)-Nya ialah Dia menciptakan untukmu istri-istri dari jenismu sendiri, supaya kamu cenderung dan merasa tenteram kepadanya, dan dijadikan-Nya di antaramu rasa kasih dan sayang. Sesungguhnya pada yang demikian itu benar-benar terdapat tanda-tanda bagi kaum yang berpikir. (Ar-Rum:21)</div>
-      </div>
-    </section>
+  <!-- Slide 7 Ucapan -->
+  <section id="slide7">
+    <h2>Kirim Ucapan</h2>
+    <form>
+      <textarea placeholder="Tulis ucapan..." style="width:100%; height:80px;"></textarea>
+      <br>
+      <button type="submit">Kirim</button>
+    </form>
+  </section>
 
-    <!-- SLIDE 5: Save The Date & Map -->
-    <section class="slide whiteboard" id="slide-5">
-      <div class="whitebox">
-        <div style="font-weight:700;margin-bottom:10px">Save The Date</div>
-        <div style="font-size:20px">Akad &amp; Resepsi Pernikahan</div>
-        <div>Desember</div>
-        <div style="font-weight:700;margin-top:8px">Minggu | 14 | 2025</div>
-        <div>08.00 WIB — Rumah Lina</div>
-        <a class="map-link" id="mapLink" href="https://maps.app.goo.gl/UWhk7CUqkBS6rVZ3Z9" target="_blank">Buka Map Lokasi</a>
-      </div>
-    </section>
+  <!-- Slide 8 penutup -->
+  <section id="slide8" style="background:url('bgistana.jpg') no-repeat center/cover;">
+    <img src="pasangan.png" alt="Pasangan">
+    <h1 style="color:blue; font-family:'Great Vibes', cursive;">Lina & Faqih</h1>
+    <h2>Terima kasih</h2>
+  </section>
 
-    <!-- SLIDE 6: Titip Hadiah -->
-    <section class="slide gift" id="slide-6">
-      <div class="account">
-        <div style="font-weight:700">Titip Hadiah</div>
-        <p>Doa restu Bapak/Ibu sekalian merupakan karunia yang sangat berarti bagi kami. Dan jika memberi merupakan ungkapan tanda kasih, Bapak/Ibu dapat memberi kado secara cashless. Terima kasih.</p>
-        <div style="display:flex;align-items:center;gap:8px">
-          <div>
-            <div style="font-weight:700">Rekening (BCA)</div>
-            <div id="rek">1234567890 a.n Marlina</div>
-          </div>
-          <button class="copy-btn" data-copy="1234567890">Copy</button>
-        </div>
-      </div>
-    </section>
-
-    <!-- SLIDE 7: Ucapan -->
-    <section class="slide" id="slide-7">
-      <div class="greetings">
-        <div style="font-weight:700;margin-bottom:12px">Ucapan & Doa</div>
-        <div class="greet-list" id="greetList">
-          <!-- placeholder messages (can be added dynamically) -->
-          <div class="greet-item">Semoga lancar acaranya — Bapak Budi</div>
-          <div class="greet-item">Selamat menempuh hidup baru — Siti</div>
-        </div>
-        <div style="margin-top:12px;display:flex;gap:8px;max-width:520px">
-          <input id="greetInput" placeholder="Tulis pesan & nama" style="flex:1;padding:10px;border-radius:8px;border:1px solid #ddd">
-          <button id="greetAdd" style="padding:10px;border-radius:8px">Kirim</button>
-        </div>
-      </div>
-    </section>
-
-    <!-- SLIDE 8: Closing -->
-    <section class="slide closing" id="slide-8">
-      <div class="frame-a4 thanks-box">
-        <img src="pasangan.png" class="couple-photo" alt="Pasangan">
-        <div class="names">Lina &amp; Faqih</div>
-        <div style="margin-top:8px">Terima kasih</div>
-      </div>
-    </section>
-
+  <!-- Kontrol -->
+  <div class="controls">
+    <button onclick="toggleScroll()">⏯</button>
+    <button onclick="toggleMusic()">🔇</button>
   </div>
 
-  <!-- bottom controls -->
-  <div class="controls" id="controls">
-    <div class="control-btn" id="toggleAuto">Pause Auto</div>
-    <div class="control-btn" id="muteBtn">Mute Music</div>
-    <div class="control-btn" id="btnTo1">Cover</div>
-    <div class="control-btn" id="btnTo2">Countdown</div>
-    <div class="control-btn" id="btnTo5">SaveDate</div>
-  </div>
-
-  <!-- Snow canvas (particles) -->
-  <canvas id="snowCanvas" style="position:fixed;left:0;top:0;pointer-events:none;z-index:50"></canvas>
+  <audio id="bg-music" src="lagu.mp3" loop></audio>
 
   <script>
-    // ==== Utility: read "to" param from URL to show recipient name ==== 
-    const params = new URLSearchParams(location.search);
-    const toParam = params.get('to') || params.get('kepada') || params.get('nama');
-    if(toParam){
-      document.getElementById('toName').textContent = decodeURIComponent(toParam);
-    } else {
-      document.getElementById('toName').textContent = 'Bapak Budi';
+    // Nama dari URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const guest = urlParams.get('to');
+    if(guest) document.getElementById('guest-name').innerText = guest;
+
+    // Countdown
+    const targetDate = new Date('Dec 14, 2025 08:00:00').getTime();
+    setInterval(() => {
+      const now = new Date().getTime();
+      const diff = targetDate - now;
+      const d = Math.floor(diff/(1000*60*60*24));
+      const h = Math.floor((diff%(1000*60*60*24))/(1000*60*60));
+      const m = Math.floor((diff%(1000*60*60))/(1000*60));
+      const s = Math.floor((diff%(1000*60))/1000);
+      document.getElementById('countdown').innerHTML = `
+        <div class="time-box"><span>${d}</span><span>Days</span></div>
+        <div class="time-box"><span>${h}</span><span>Hours</span></div>
+        <div class="time-box"><span>${m}</span><span>Minutes</span></div>
+        <div class="time-box"><span>${s}</span><span>Seconds</span></div>`;
+    },1000);
+
+    // Auto scroll
+    let scrolling = true;
+    function autoScroll(){
+      if(scrolling) window.scrollBy(0,1);
+    }
+    setInterval(autoScroll,50);
+    function toggleScroll(){ scrolling=!scrolling; }
+
+    // Music
+    const music=document.getElementById('bg-music');
+    function openInvitation(){ music.play(); }
+    function toggleMusic(){
+      if(music.muted){ music.muted=false; } else { music.muted=true; }
     }
 
-    // ==== Open invite: scroll to slide 2 & play music ==== 
-    const openBtn = document.getElementById('openInvite');
-    const music = document.getElementById('bgMusic');
-    openBtn.addEventListener('click', ()=>{
-      document.getElementById('slide-2').scrollIntoView({behavior:'smooth'});
-      // try to play audio (may be blocked by browser until user gestures) 
-      music.play().catch(()=>{});
-    });
-
-    // ==== Countdown to 14 Dec 2025 08:00 WIB (UTC+7) ====
-    function updateCountdown(){
-      // target in local time: 2025-12-14 08:00:00 WIB (UTC+7)
-      const target = new Date(Date.UTC(2025,11,14,1,0,0)); // 08:00 WIB = 01:00 UTC
-      const now = new Date();
-      let diff = Math.max(0, target - now);
-      const days = Math.floor(diff / (1000*60*60*24));
-      diff -= days*(1000*60*60*24);
-      const hours = Math.floor(diff / (1000*60*60));
-      diff -= hours*(1000*60*60);
-      const minutes = Math.floor(diff / (1000*60));
-      diff -= minutes*(1000*60);
-      const seconds = Math.floor(diff/1000);
-      document.getElementById('cd-days').textContent = days;
-      document.getElementById('cd-hours').textContent = String(hours).padStart(2,'0');
-      document.getElementById('cd-minutes').textContent = String(minutes).padStart(2,'0');
-      document.getElementById('cd-seconds').textContent = String(seconds).padStart(2,'0');
+    // Copy rekening
+    function copyRek(){
+      navigator.clipboard.writeText('1234567890 - Lina & Faqih');
+      alert('Rekening disalin!');
     }
-    updateCountdown();setInterval(updateCountdown,1000);
 
-    // ==== Save to calendar (create ICS link) ====
-    document.getElementById('saveCal').addEventListener('click', ()=>{
-      const title = encodeURIComponent('Akad & Resepsi — Lina & Faqih');
-      const details = encodeURIComponent('Undangan pernikahan Lina & Faqih. Lokasi: Rumah Lina');
-      // event time (UTC)
-      const start = '20251214T010000Z'; // 2025-12-14 01:00 UTC
-      const end = '20251214T040000Z';
-      const href = `data:text/calendar;charset=utf8,BEGIN:VCALENDAR\nVERSION:2.0\nBEGIN:VEVENT\nUID:${Date.now()}\nDTSTAMP:${start}\nDTSTART:${start}\nDTEND:${end}\nSUMMARY:${decodeURIComponent(title)}\nDESCRIPTION:${decodeURIComponent(details)}\nEND:VEVENT\nEND:VCALENDAR`;
-      const a = document.createElement('a');a.href = href;a.download = 'save-date-lina-faqih.ics';document.body.appendChild(a);a.click();a.remove();
-    });
-
-    // ==== Copy rekening ==== 
-    document.querySelectorAll('.copy-btn').forEach(b=>b.addEventListener('click', (e)=>{
-      const val = e.currentTarget.dataset.copy || document.getElementById('rek').textContent;
-      navigator.clipboard.writeText(val).then(()=>{
-        alert('Nomor rekening disalin: ' + val);
-      }).catch(()=>{prompt('Salin rekening, copy manual:', val)});
-    }));
-
-    // ==== Ucapan add ====
-    document.getElementById('greetAdd').addEventListener('click', ()=>{
-      const v = document.getElementById('greetInput').value.trim();
-      if(!v) return alert('Isi pesan & nama');
-      const list = document.getElementById('greetList');
-      const item = document.createElement('div');item.className='greet-item';item.textContent=v;list.prepend(item);
-      document.getElementById('greetInput').value='';
-    });
-
-    // ==== Controls: jump to slides ====
-    document.getElementById('btnTo1').addEventListener('click', ()=>document.getElementById('slide-1').scrollIntoView({behavior:'smooth'}));
-    document.getElementById('btnTo2').addEventListener('click', ()=>document.getElementById('slide-2').scrollIntoView({behavior:'smooth'}));
-    document.getElementById('btnTo5').addEventListener('click', ()=>document.getElementById('slide-5').scrollIntoView({behavior:'smooth'}));
-
-    // ==== Mute / unmute music ====
-    const muteBtn = document.getElementById('muteBtn');
-    muteBtn.addEventListener('click', ()=>{
-      if(music.muted){music.muted=false;muteBtn.textContent='Mute Music'}else{music.muted=true;muteBtn.textContent='Unmute Music'}
-    });
-
-    // ==== Auto-scroll feature ====
-    let auto = true;let autoInterval=null;
-    const toggleAuto = document.getElementById('toggleAuto');
-    function startAutoScroll(){
-      stopAutoScroll();
-      autoInterval = setInterval(()=>{
-        const vp = document.getElementById('viewport');
-        const next = Math.min(vp.scrollTop + window.innerHeight, vp.scrollHeight - window.innerHeight);
-        vp.scrollBy({top:window.innerHeight,behavior:'smooth'});
-      },6000);
-      toggleAuto.textContent='Pause Auto';auto=true;
-    }
-    function stopAutoScroll(){if(autoInterval)clearInterval(autoInterval);auto=false;toggleAuto.textContent='Play Auto'}
-    toggleAuto.addEventListener('click', ()=>{ if(auto) stopAutoScroll(); else startAutoScroll(); });
-    // start by default
-    startAutoScroll();
-
-    // ==== Snow effect using canvas ====
-    const canvas = document.getElementById('snowCanvas');const ctx = canvas.getContext('2d');let w=0,h=0;function resize(){w=canvas.width=window.innerWidth;h=canvas.height=window.innerHeight}
-    window.addEventListener('resize',resize);resize();
-    const flakes=[];for(let i=0;i<120;i++)flakes.push({x:Math.random()*w,y:Math.random()*h,r:Math.random()*3+1,d:Math.random()*1});
-    function drawSnow(){ctx.clearRect(0,0,w,h);ctx.fillStyle='rgba(255,255,255,0.8)';flakes.forEach(f=>{ctx.beginPath();ctx.arc(f.x,f.y,f.r,0,Math.PI*2);ctx.fill();f.y+= Math.pow(f.r,0.8)+0.4;f.x += Math.sin(f.d); if(f.y>h){f.y= -10;f.x=Math.random()*w}});requestAnimationFrame(drawSnow)}
-    drawSnow();
-
-    // ==== small CSS animations (simple) ====
-    const style = document.createElement('style');style.textContent=`@keyframes fadeIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}@keyframes slideInLeft{from{opacity:0;transform:translateX(-40px)}to{opacity:1;transform:none}}@keyframes slideInRight{from{opacity:0;transform:translateX(40px)}to{opacity:1;transform:none}}`;
-    document.head.appendChild(style);
-
-    // ==== Responsive note: ensure media files present in same folder ====
-    // NOTE: Browser autoplay policy may block audio until user interacts. "Buka Undangan" is a user gesture and should allow playback.
-
-    // ==== optional: allow stopping music when leaving page ====
-    window.addEventListener('pagehide', ()=>{music.pause();});
-
+    // Efek salju
+    const canvas=document.getElementById('snow-canvas');
+    const ctx=canvas.getContext('2d');
+    let snow=[];
+    function resize(){canvas.width=window.innerWidth;canvas.height=window.innerHeight;}
+    window.onresize=resize;resize();
+    for(let i=0;i<100;i++) snow.push({x:Math.random()*canvas.width,y:Math.random()*canvas.height,r:Math.random()*3+2,d:Math.random()+1});
+    function draw(){ctx.clearRect(0,0,canvas.width,canvas.height);ctx.fillStyle="white";ctx.beginPath();for(let i=0;i<snow.length;i++){let f=snow[i];ctx.moveTo(f.x,f.y);ctx.arc(f.x,f.y,f.r,0,Math.PI*2,true);}ctx.fill();update();}
+    let angle=0;
+    function update(){angle+=0.01;for(let i=0;i<snow.length;i++){let f=snow[i];f.y+=Math.pow(f.d,2)+1;f.x+=Math.sin(angle)*2;if(f.y>canvas.height){snow[i]={x:Math.random()*canvas.width,y:0,r:f.r,d:f.d};}}}
+    setInterval(draw,33);
   </script>
-
 </body>
 </html>
