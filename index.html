@@ -1,569 +1,331 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Undangan Lina & Faqih</title>
-
-  <!-- Google Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:wght@400;700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
-
   <style>
-    :root{
-      --accent:#2366b3;
-      --card: rgba(255,255,255,0.92);
-      --muted:#f3f6fb;
-      --glass: rgba(255,255,255,0.75);
-      --radius:14px;
-    }
-    *{box-sizing:border-box}
-    html,body{height:100%;margin:0;font-family:Poppins,system-ui,Arial;background:#0b0f14;color:#111;overflow:hidden}
-    a{color:inherit}
-    button{font-family:inherit}
+    * {margin:0; padding:0; box-sizing:border-box;}
+    body {font-family:'Poppins', sans-serif; overflow-x:hidden; background:#fff; scroll-behavior:smooth;}
+    section {min-height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; position:relative;}
+    .hidden {display:none;}
 
-    /* viewport: stacked slides vertical */
-    #viewport{height:100vh;overflow-y:auto;scroll-behavior:smooth;scroll-snap-type:y mandatory}
-    .slide{min-height:100vh;padding:22px;display:flex;align-items:center;justify-content:center;flex-direction:column;position:relative;scroll-snap-align:start}
-    .a4{width:820px;max-width:94%;border-radius:12px;padding:18px}
+    /* Overlay Snowfall */
+    #snowfall {position:fixed; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:1000;}
 
-    /* Universal fade-up anim helper (start hidden, add .in to show) */
-    .anim{opacity:0;transform:translateY(16px);transition:opacity .7s ease, transform .7s ease}
-    .anim.in{opacity:1;transform:none}
+    /* NAV */
+    #nav-controls {position:fixed; bottom:20px; right:20px; display:flex; gap:12px; z-index:999; opacity:0; transition:opacity .5s;}
+    #nav-controls button {background:rgba(0,0,0,0.6); border:none; border-radius:50%; width:50px; height:50px; color:#fff; font-size:20px; cursor:pointer;}
+    #nav-controls.show {opacity:1;}
 
-    /* small screens */
-    @media(max-width:700px){
-      .a4{padding:12px;width:92%}
-    }
+    /* Animations */
+    @keyframes fadeInUp {from{opacity:0; transform:translateY(30px);} to{opacity:1; transform:translateY(0);} }
+    @keyframes fly {0%{transform:translateX(-200px);}100%{transform:translateX(120%);} }
 
-    /* ---------- SLIDE 1 (COVER) ---------- */
-    #slide-1{background:url('bgistana.jpg') center/cover no-repeat; background-size:cover;display:flex;align-items:center;justify-content:center}
-    #slide-1 .a4{background:linear-gradient(180deg, rgba(255,255,255,0.96), rgba(255,255,255,0.9));text-align:center;box-shadow:0 10px 40px rgba(0,0,0,0.35)}
-    #slide-1 .badge-top{position:absolute;right:18px;top:18px;width:64px}
-    #slide-1 .badge-bottom{position:absolute;left:18px;bottom:18px;width:64px}
-    .cover-photo{width:220px;height:220px;object-fit:cover;border-radius:12px}
-    .cover-name{font-family:'Great Vibes',cursive;color:var(--accent);font-size:48px;margin-top:10px}
-    .cover-text{font-size:15px;margin:12px 0;line-height:1.5;color:#222}
-    .to-line{font-weight:600;margin-top:14px;color:#2b2b2b}
-    .open-btn{display:inline-flex;align-items:center;gap:10px;margin-top:20px;padding:12px 18px;border-radius:999px;background:var(--accent);color:white;cursor:pointer;border:none}
-    /* prevent interaction before open - overlay */
-    #lockLayer{position:fixed;inset:0;background:rgba(0,0,0,0.0);z-index:80;pointer-events:auto}
+    /* Slide 1 */
+    #slide1 {background:url('bgistana.jpg') no-repeat center/cover; position:relative;}
+    #slide1::before {content:''; position:absolute; top:0; left:0; width:100%; height:100%; background:rgba(255,255,255,0.6);}
+    #slide1 .content {position:relative; z-index:2; animation:fadeInUp 2s ease;}
+    #slide1 img.overlay1 {position:absolute; top:20px; right:20px; width:120px;}
+    #slide1 img.overlay2 {position:absolute; bottom:20px; left:20px; width:120px;}
+    #slide1 img.pasangan {max-width:250px; border-radius:12px;}
+    #slide1 h1 {font-family:'Great Vibes', cursive; color:blue; font-size:2.5em; margin:20px 0;}
+    #slide1 p {font-size:1em; margin:10px 0;}
+    #slide1 button {margin-top:20px; padding:12px 24px; font-size:1em; border:none; border-radius:30px; background:blue; color:#fff; cursor:pointer; display:flex; align-items:center; gap:8px; z-index:5; position:relative;}
 
-    /* ---------- SLIDE 2 (HAPPY WEDDING) ---------- */
-    #slide-2{background:url('suasana.jpg') center/cover no-repeat;color:#fff;overflow:hidden}
-    #slide-2 .hero{position:relative;width:100%;max-width:1100px;margin:0 auto;text-align:center;padding:18px}
-    .happy-text{font-family:'Playfair Display',serif;font-size:44px;text-shadow:0 8px 30px rgba(0,0,0,0.6)}
-    .castle{position:absolute;left:50%;transform:translateX(-50%);top:6%;width:125%;opacity:0.22;pointer-events:none;z-index:0}
-    .pilar-left,.pilar-right{position:absolute;top:6%;width:110px;height:320px;pointer-events:none;z-index:2}
-    .pilar-left{left:2%}
-    .pilar-right{right:2%}
-    .center-photo{position:relative;z-index:3;width:480px;max-width:86%;border-radius:10px;display:block;margin:18px auto;object-fit:cover}
-    /* bottom gradient mask for photo to fade into overlay */
-    .photo-mask{position:absolute;left:50%;transform:translateX(-50%);bottom:0;width:100%;max-width:480px;height:150px;background:linear-gradient(180deg, rgba(0,0,0,0), rgba(0,0,0,0.7));z-index:4;border-radius:0 0 18px 18px;pointer-events:none}
-    .couple-title{font-family:'Great Vibes',cursive;font-size:34px;color:var(--accent);margin-top:10px;z-index:5}
-    .countdown{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;justify-items:center;margin-top:14px;z-index:5}
-    .cd-box{background:linear-gradient(180deg, rgba(255,255,255,0.95), rgba(255,255,255,0.88));color:#111;padding:12px;border-radius:12px;min-width:88px;box-shadow:0 8px 20px rgba(0,0,0,0.12)}
-    .cd-num{font-size:26px;font-weight:700}
-    .cd-label{font-size:12px;margin-top:6px}
-    .save-cal{display:inline-block;margin-top:12px;padding:10px 14px;border-radius:10px;background:var(--muted);cursor:pointer;z-index:5}
-    .bird-vid{position:absolute;top:4%;left:50%;transform:translateX(-50%);width:140px;height:72px;pointer-events:none;z-index:22}
+    /* Slide 2 */
+    #slide2 {background:url('suasana.jpg') no-repeat center/cover; color:#fff; position:relative;}
+    #slide2 .happy {font-family:'Great Vibes', cursive; font-size:3em; margin-bottom:20px; animation:fadeInUp 1.5s ease-in-out;}
+    #slide2 .frame {position:relative; max-width:600px; margin:auto;}
+    #slide2 img.bg {position:absolute; top:0; left:50%; transform:translateX(-50%); width:100%; opacity:0.4;}
+    #slide2 img.pilar-left {position:absolute; left:0; top:0; height:100%;}
+    #slide2 img.pilar-right {position:absolute; right:0; top:0; height:100%;}
+    #slide2 img.couple {width:100%;}
+    #slide2 h2 {font-size:2.2em; margin:20px 0;}
+    .countdown {display:flex; justify-content:center; gap:15px; margin:20px 0;}
+    .count-box {background:rgba(0,0,0,0.6); padding:15px; border-radius:10px;}
+    .count-box span {display:block; font-size:2em; font-weight:bold;}
+    .count-box small {display:block; font-size:0.9em;}
+    #slide2 .calendar {margin-top:15px; font-size:1em; text-decoration:underline; cursor:pointer;}
+    #birds {position:absolute; top:30px; left:0; width:100%; height:80px; overflow:hidden;}
+    #birds video {width:150px; animation:fly 15s linear infinite;}
 
-    @media(max-width:900px){
-      .center-photo{width:360px}
-      .countdown{grid-template-columns:repeat(2,1fr)}
-    }
-    @media(max-width:480px){
-      .happy-text{font-size:28px}
-      .center-photo{width:280px}
-    }
+    /* Slide 3 Profil */
+    #slide3 {background:url('bg2.png') repeat-y center/cover; color:#000; padding:40px;}
+    #slide3 .bismillah {font-size:2em; margin-bottom:20px; animation:fadeInUp 1s ease;}
+    #slide3 .undangan {font-size:1em; margin-bottom:40px; animation:fadeInUp 1.5s ease;}
+    #slide3 .profil {display:flex; align-items:center; justify-content:center; margin:20px 0; gap:20px;}
+    #slide3 img {width:150px; border-radius:15px; box-shadow:0 4px 12px rgba(0,0,0,0.3);}
+    #slide3 h3 {font-family:'Great Vibes', cursive; font-size:2em; color:#333;}
 
-    /* ---------- SLIDE 3 (PAIRS) ---------- */
-    #slide-3{background:url('bg2.png') center/cover no-repeat;padding:48px 18px;color:#111}
-    .bismillah{font-size:22px;margin-bottom:12px;font-family:serif}
-    .invite-text{max-width:840px;margin:0 auto 18px;line-height:1.6}
-    .pair-row{display:flex;gap:20px;align-items:center;justify-content:center;flex-wrap:wrap;max-width:980px;margin-top:18px}
-    .person{background:var(--card);padding:12px;border-radius:12px;display:flex;gap:12px;align-items:center;box-shadow:0 12px 30px rgba(0,0,0,0.12)}
-    .person img{width:120px;height:120px;object-fit:cover;border-radius:12px;box-shadow:0 12px 26px rgba(0,0,0,0.15)}
-    .ampersand{font-family:'Great Vibes',cursive;font-size:72px;margin:16px 0;color:var(--accent)}
+    /* Slide 4 Ayat */
+    #slide4 {background:url('bgistana2.jpg') no-repeat center/cover; position:relative; color:#000; padding:40px;}
+    #slide4 img.overlay1 {position:absolute; top:20px; right:20px; width:120px;}
+    #slide4 img.overlay2 {position:absolute; bottom:20px; left:20px; width:120px;}
+    #slide4 .ayat {font-size:1.5em; margin-bottom:20px; animation:fadeInUp 1.5s ease;}
+    #slide4 .terjemahan {font-size:1em; animation:fadeInUp 2s ease;}
 
-    /* ---------- SLIDE 4 (QURAN) ---------- */
-    #slide-4{background:url('bgistana2.jpg') center/cover no-repeat;padding:48px;color:#111}
-    #slide-4::before{content:'';position:absolute;inset:0;background:rgba(255,255,255,0.6)}
-    #slide-4 .verse{position:relative;z-index:3;background:var(--glass);padding:22px;border-radius:12px;max-width:780px;text-align:center;box-shadow:0 12px 30px rgba(0,0,0,0.12)}
+    /* Slide 5 Save Date */
+    #slide5 {background:#fff; color:#000; padding:40px;}
+    #slide5 .box {background:linear-gradient(135deg,#f9f9f9,#ececec); border-radius:20px; padding:30px; box-shadow:0 4px 12px rgba(0,0,0,0.2);}
+    #slide5 h2 {font-family:'Great Vibes', cursive; font-size:2.5em; margin-bottom:15px;}
+    #slide5 p {margin:6px 0; font-size:1.1em;}
+    #slide5 a {display:inline-block; margin-top:10px; color:blue; text-decoration:underline;}
 
-    /* ---------- SLIDE 5 (SAVE THE DATE) ---------- */
-    #slide-5{background:linear-gradient(180deg,#fff,#fbfdff);padding:48px}
-    .save-box{background:linear-gradient(135deg,#fff,#e6f0ff);padding:28px;border-radius:16px;box-shadow:0 10px 30px rgba(0,0,0,0.08);max-width:520px;text-align:center}
-    .save-box h3{font-family:'Great Vibes',cursive;font-size:30px;color:#2c3e50;margin-bottom:8px}
-    .map-btn{display:inline-block;margin-top:12px;padding:10px 14px;border-radius:10px;background:#3498db;color:#fff;text-decoration:none}
+    /* Slide 6 Titip Hadiah */
+    #slide6 {background:url('bg2.png') center/cover; padding:40px; color:#000;}
+    #slide6 h2 {font-family:'Great Vibes', cursive; font-size:2.5em; margin-bottom:20px;}
+    #slide6 .gift-box {background:#fff; border-radius:15px; padding:20px; box-shadow:0 4px 12px rgba(0,0,0,0.2); margin:15px auto; max-width:400px;}
+    .copy-btn {background:blue; color:#fff; border:none; padding:6px 12px; border-radius:8px; cursor:pointer; margin-top:8px;}
 
-    /* ---------- SLIDE 6 (TITIP HADIAH) ---------- */
-    #slide-6{background:url('bg2.png') center/cover;padding:48px}
-    .gift-card{background:var(--card);border-radius:16px;padding:22px;max-width:720px;box-shadow:0 12px 30px rgba(0,0,0,0.12)}
-    .account-row{display:flex;gap:12px;align-items:center;justify-content:space-between;margin-top:12px;padding:10px;border-radius:12px;background:#fff;border:2px solid rgba(35,102,179,0.08)}
-    .account-left{display:flex;flex-direction:column;align-items:flex-start}
-    .copy-btn{background:var(--accent);border:none;color:#fff;padding:8px 12px;border-radius:8px;cursor:pointer}
+    /* Slide 7 Ucapan */
+    #slide7 {background:#fafafa; padding:40px;}
+    #slide7 h2 {font-family:'Great Vibes', cursive; font-size:2.5em; margin-bottom:20px;}
+    #messages {margin-top:20px; text-align:left; max-width:500px; margin:auto;}
+    #messages p {background:#fff; padding:10px; border-radius:8px; box-shadow:0 2px 8px rgba(0,0,0,0.1); margin-bottom:8px;}
 
-    /* ---------- SLIDE 7 (UCAPAN) ---------- */
-    #slide-7{background:url('bg2.png') center/cover;padding:36px}
-    .msg-form{background:var(--card);padding:16px;border-radius:12px;max-width:760px;width:94%;box-shadow:0 8px 24px rgba(0,0,0,0.1)}
-    .msg-form input,.msg-form textarea{width:100%;padding:10px;margin-top:10px;border-radius:10px;border:1px solid #ddd;font-size:14px}
-    .msg-list{max-width:760px;width:94%;margin-top:18px}
-    .msg-item{background:rgba(255,255,255,0.96);padding:12px;border-radius:10px;margin-bottom:10px;box-shadow:0 6px 18px rgba(0,0,0,0.06)}
+    /* Slide 8 Penutup */
+    #slide8 {background:url('bgistana.jpg') no-repeat center/cover; position:relative; color:#000; padding:40px;}
+    #slide8::before {content:''; position:absolute; top:0; left:0; width:100%; height:100%; background:rgba(255,255,255,0.6);}
+    #slide8 .content {position:relative; z-index:2;}
+    #slide8 img.pasangan {max-width:200px; border-radius:12px; box-shadow:0 4px 12px rgba(0,0,0,0.3);}
+    #slide8 h2 {font-family:'Great Vibes', cursive; color:blue; font-size:2.5em; margin:15px 0;}
+    #slide8 p {font-size:1.2em; font-weight:bold;}
 
-    /* ---------- SLIDE 8 (PENUTUP) ---------- */
-    #slide-8{background:url('bgistana.jpg') center/cover;padding:48px;display:flex;align-items:center;justify-content:center}
-    #slide-8 .overlay-dark{position:absolute;inset:0;background:linear-gradient(180deg, rgba(0,0,0,0.28), rgba(0,0,0,0.18));z-index:1}
-    .thanks-box{position:relative;z-index:3;background:linear-gradient(180deg, rgba(255,255,255,0.94), rgba(255,255,255,0.9));padding:22px;border-radius:14px;text-align:center;box-shadow:0 12px 30px rgba(0,0,0,0.12)}
-    .thanks-photo{width:180px;height:180px;object-fit:cover;border-radius:12px;box-shadow:0 12px 30px rgba(0,0,0,0.16)}
-    .thanks-name{font-family:'Great Vibes',cursive;font-size:36px;color:var(--accent);margin-top:10px}
-
-    /* ---------- Controls bottom (hidden until open) ---------- */
-    .controls{position:fixed;left:50%;transform:translateX(-50%);bottom:18px;display:flex;gap:10px;background:rgba(0,0,0,0.36);padding:8px;border-radius:999px;backdrop-filter:blur(6px);z-index:120;opacity:0;transition:opacity .45s}
-    .controls.show{opacity:1}
-    .icon-btn{background:transparent;border:none;color:white;padding:8px;border-radius:10px;cursor:pointer;display:flex;align-items:center;gap:8px;font-size:18px}
-
-    /* Snow canvas absolute full screen */
-    #snowCanvas{position:fixed;left:0;top:0;pointer-events:none;z-index:60}
-
-    /* small responsive tweaks */
-    @media(max-width:720px){
-      .cover-name{font-size:34px}
-      .cover-photo{width:160px;height:160px}
-      .couple-title{font-size:26px}
-      .cd-num{font-size:20px}
-      .thanks-photo{width:140px;height:140px}
-      .ampersand{font-size:54px}
-    }
   </style>
 </head>
 <body>
 
-  <!-- viewport stack -->
-  <div id="viewport">
+  <!-- Snow -->
+  <canvas id="snowfall"></canvas>
 
-    <!-- SLIDE 1 -->
-    <section class="slide" id="slide-1" aria-label="Pembuka">
-      <img src="list1.png" class="badge-top" alt="dekorasi kanan atas">
-      <img src="list2.png" class="badge-bottom" alt="dekorasi kiri bawah">
+  <!-- Slide 1 -->
+  <section id="slide1">
+    <img src="list1.png" class="overlay1" alt="">
+    <img src="list2.png" class="overlay2" alt="">
+    <div class="content">
+      <img src="pasangan.png" class="pasangan" alt="Pasangan">
+      <h1>Lina & Faqih</h1>
+      <p>Tanpa Mengurangi Rasa Hormat, Kami Mengundang Bapak/Ibu/Saudara/i untuk Hadir di Acara Kami</p>
+      <p id="guest"></p>
+      <button onclick="openInvitation()">✉️ Buka Undangan</button>
+    </div>
+  </section>
 
-      <div class="a4 anim" id="coverPanel" style="text-align:center">
-        <img src="pasangan.png" alt="Pasangan" class="cover-photo anim" style="display:block;margin:0 auto">
-        <div class="cover-name anim" style="margin-top:8px">Lina & Faqih</div>
-        <p class="cover-text anim">Tanpa Mengurangi Rasa Hormat, Kami Mengundang Bapak/Ibu/Saudara/i untuk Hadir di Acara Kami</p>
-        <div class="to-line anim">Kepada: <span id="toName">Bapak Budi</span></div>
+  <!-- Slide 2 -->
+  <section id="slide2" class="hidden">
+    <h1 class="happy">Happy Wedding</h1>
+    <div class="frame">
+      <img src="istana.png" class="bg" alt="">
+      <img src="pilar.png" class="pilar-left" alt="">
+      <img src="pilar.png" class="pilar-right" alt="">
+      <img src="pasangantbg.png" class="couple" alt="">
+    </div>
+    <h2>Faqih & Lina</h2>
+    <div class="countdown" id="countdown"></div>
+    <a href="#" class="calendar">Save to Calendar</a>
+    <div id="birds">
+      <video src="burung.mp4" autoplay muted loop></video>
+    </div>
+  </section>
 
-        <button id="openInvite" class="open-btn anim" aria-label="Buka Undangan">✉️ Buka Undangan</button>
+  <!-- Slide 3 -->
+  <section id="slide3" class="hidden">
+    <div class="bismillah">بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيم</div>
+    <p class="undangan">Atas Rahmat Allah SWT, Kami bermaksud mengundang Anda di acara kami. Merupakan suatu kehormatan dan kebahagiaan bagi kami sekeluarga, apabila Bapak/Ibu/Saudara/i berkenan hadir dan memberikan doa restu.</p>
+    <div class="profil">
+      <img src="lina.jpg" alt="Lina">
+      <div>
+        <h3>Marlina</h3>
+        <p>Putri dari Bapak Lina & Ummi Lina</p>
+        <p>Beralamat di Bogor</p>
       </div>
-
-      <!-- lock overlay prevents scrolling/interactions beyond open -->
-      <div id="lockLayer" aria-hidden="true"></div>
-    </section>
-
-    <!-- SLIDE 2 -->
-    <section class="slide" id="slide-2" aria-label="Happy Wedding" style="display:none">
-      <div class="hero a4" style="text-align:center">
-        <div class="happy-text anim">Happy Wedding</div>
-
-        <img src="istana.png" class="castle" aria-hidden="true" alt="">
-        <img src="pilar.png" class="pilar-left" aria-hidden="true" alt="">
-        <img src="pilar.png" class="pilar-right" aria-hidden="true" alt="">
-        <img src="pasangantbg.png" class="center-photo anim" alt="Pasangan">
-
-        <!-- mask gradient at bottom so image fades into content -->
-        <div class="photo-mask" aria-hidden="true"></div>
-
-        <div class="couple-title anim">Faqih & Lina</div>
-
-        <div class="countdown anim" id="countdown">
-          <div class="cd-box"><div class="cd-num" id="cd-days">0</div><div class="cd-label">Days</div></div>
-          <div class="cd-box"><div class="cd-num" id="cd-hours">00</div><div class="cd-label">Hours</div></div>
-          <div class="cd-box"><div class="cd-num" id="cd-minutes">00</div><div class="cd-label">Minutes</div></div>
-          <div class="cd-box"><div class="cd-num" id="cd-seconds">00</div><div class="cd-label">Seconds</div></div>
-        </div>
-
-        <div style="margin-top:10px" class="anim"><button id="saveCalendar" class="save-cal" aria-label="Save to calendar">Save to Calendar</button></div>
-
-        <div class="bird-vid" aria-hidden="true">
-          <video src="burung.mp4" autoplay loop muted playsinline></video>
-        </div>
+    </div>
+    <h2>&</h2>
+    <div class="profil">
+      <div>
+        <h3>Muhammad Faqih</h3>
+        <p>Putra dari Abi Faqih & Mama Faqih</p>
+        <p>Beralamat di Jakarta</p>
       </div>
-    </section>
+      <img src="faqih.jpg" alt="Faqih">
+    </div>
+  </section>
 
-    <!-- SLIDE 3 -->
-    <section class="slide" id="slide-3" aria-label="Profil Mempelai" style="display:none">
-      <div class="a4" style="text-align:center">
-        <div class="bismillah anim">بِسْمِ اللّٰهِ الرَّحْمٰنِ الرَّحِيْمِ</div>
-        <p class="invite-text anim">Atas Rahmat Allah SWT, Kami bermaksud mengundang Anda di acara kami. Merupakan suatu kehormatan dan kebahagiaan bagi kami sekeluarga, apabila Bapak/Ibu/Saudara/i berkenan hadir dan memberikan doa restu.</p>
+  <!-- Slide 4 -->
+  <section id="slide4" class="hidden">
+    <img src="list1.png" class="overlay1" alt="">
+    <img src="list2.png" class="overlay2" alt="">
+    <div class="ayat">وَمِنْ آيَاتِهِ أَنْ خَلَقَ لَكُم مِّنْ أَنفُسِكُمْ أَزْوَاجًا لِّتَسْكُنُوا إِلَيْهَا ...</div>
+    <div class="terjemahan">Dan di antara tanda-tanda kekuasaan-Nya ialah Dia menciptakan untukmu isteri-isteri dari jenismu sendiri...</div>
+  </section>
 
-        <div class="pair-row">
-          <div class="person anim" style="animation-delay:.1s">
-            <img src="lina.jpg" alt="Lina">
-            <div style="text-align:left">
-              <div style="font-family:'Great Vibes',cursive;font-size:20px">Marlina</div>
-              <div>Putri dari Bapak Lina & Ummi Lina</div>
-              <div>Beralamat di Bogor</div>
-            </div>
-          </div>
+  <!-- Slide 5 -->
+  <section id="slide5" class="hidden">
+    <div class="box">
+      <h2>Save The Date</h2>
+      <p>Akad & Resepsi Pernikahan</p>
+      <p>Desember</p>
+      <p>Minggu | 14 | 2025</p>
+      <p>Rumah Lina</p>
+      <a href="https://maps.app.goo.gl/UWhk7CUqkBS6rZ3Z9" target="_blank">Map Lokasi Acara</a>
+    </div>
+  </section>
 
-          <div class="ampersand anim" style="animation-delay:.25s">&amp;</div>
+  <!-- Slide 6 -->
+  <section id="slide6" class="hidden">
+    <h2>Titip Hadiah</h2>
+    <p>Doa restu Bapak/Ibu sekalian merupakan karunia yang sangat berarti bagi kami. Dan jika memberi merupakan ungkapan tanda kasih, Bapak/Ibu dapat memberi kado secara cashless. Terima kasih.</p>
+    <div class="gift-box">
+      <p>BRI - 1234567890</p>
+      <button class="copy-btn" onclick="copyRek('1234567890')">Copy</button>
+    </div>
+    <div class="gift-box">
+      <p>BCA - 0987654321</p>
+      <button class="copy-btn" onclick="copyRek('0987654321')">Copy</button>
+    </div>
+  </section>
 
-          <div class="person anim" style="animation-delay:.4s">
-            <img src="faqih.jpg" alt="Faqih">
-            <div style="text-align:left">
-              <div style="font-family:'Great Vibes',cursive;font-size:20px">Muhammad Faqih</div>
-              <div>Putra dari Abi Faqih & Mama Faqih</div>
-              <div>Beralamat di Jakarta</div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
+  <!-- Slide 7 -->
+  <section id="slide7" class="hidden">
+    <h2>Ucapan & Doa</h2>
+    <form onsubmit="addMessage(event)">
+      <input type="text" id="nama" placeholder="Nama" required>
+      <textarea id="ucapan" placeholder="Tulis ucapan..." required></textarea>
+      <button type="submit">Kirim</button>
+    </form>
+    <div id="messages"></div>
+  </section>
 
-    <!-- SLIDE 4 -->
-    <section class="slide" id="slide-4" aria-label="Ayat Al-Qur'an" style="display:none">
-      <img src="list1.png" class="badge-top" alt="">
-      <img src="list2.png" class="badge-bottom" alt="">
-      <div class="a4 verse anim" style="text-align:center">
-        <div style="font-family:serif;font-size:26px;line-height:1.4">
-          وَمِنْ ءَايَاتِهِ أَنْ خَلَقَ لَكُمْ مِنْ أَنْفُسِكُمْ أَزْوَاجًا لِتَسْكُنُوا إِلَيْهَا وَجَعَلَ بَيْنَكُمْ مَوَدَّةً وَرَحْمَةً ۚ إِنَّ فِي ذَٰلِكَ لَآيَاتٍ لِّقَوْمٍ يَتَفَكَّرُونَ
-        </div>
-        <div style="margin-top:12px;line-height:1.6">
-          Artinya: Dan di antara tanda-tanda (kebesaran)-Nya ialah Dia menciptakan untukmu istri-istri dari jenismu sendiri, supaya kamu cenderung dan merasa tenteram kepadanya, dan dijadikan-Nya di antaramu rasa kasih dan sayang. Sesungguhnya pada yang demikian itu benar-benar terdapat tanda-tanda bagi kaum yang berpikir. (Ar-Rum:21)
-        </div>
-      </div>
-    </section>
+  <!-- Slide 8 -->
+  <section id="slide8" class="hidden">
+    <div class="content">
+      <img src="pasangan.png" class="pasangan" alt="Pasangan">
+      <h2>Lina & Faqih</h2>
+      <p>Terima Kasih</p>
+    </div>
+  </section>
 
-    <!-- SLIDE 5 -->
-    <section class="slide" id="slide-5" aria-label="Save The Date" style="display:none">
-      <div class="a4 save-box anim" style="text-align:center">
-        <h3>Save The Date</h3>
-        <div style="font-size:18px;margin-top:6px">Akad & Resepsi Pernikahan</div>
-        <div style="margin-top:8px">Desember</div>
-        <div style="font-weight:700;margin:12px 0">Minggu | 14 | 2025</div>
-        <div>Rumah Lina</div>
-        <a class="map-btn" id="mapLink" href="https://maps.app.goo.gl/UWhk7CUqkBS6rZ3Z9" target="_blank" rel="noopener">📍 Map Lokasi Acara</a>
-      </div>
-    </section>
-
-    <!-- SLIDE 6 -->
-    <section class="slide" id="slide-6" aria-label="Titip Hadiah" style="display:none">
-      <div class="a4 gift-card anim">
-        <h3 style="margin:0 0 6px 0">Titip Hadiah</h3>
-        <p style="margin:0 0 12px 0;line-height:1.6">
-          Doa restu Bapak/Ibu sekalian merupakan karunia yang sangat berarti bagi kami. Dan jika memberi merupakan ungkapan tanda kasih, Bapak/Ibu dapat memberi kado secara cashless. Terima kasih.
-        </p>
-
-        <div class="account-row">
-          <div class="account-left">
-            <div style="font-weight:700">BCA</div>
-            <div style="font-size:14px">1234567890</div>
-            <div style="font-size:13px;color:#555">a.n. Marlina</div>
-          </div>
-          <div>
-            <button class="copy-btn" data-acc="BCA | 1234567890 | Marlina">Copy</button>
-          </div>
-        </div>
-
-        <div class="account-row" style="margin-top:12px">
-          <div class="account-left">
-            <div style="font-weight:700">Mandiri</div>
-            <div style="font-size:14px">9876543210</div>
-            <div style="font-size:13px;color:#555">a.n. Muhammad Faqih</div>
-          </div>
-          <div>
-            <button class="copy-btn" data-acc="Mandiri | 9876543210 | Muhammad Faqih">Copy</button>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- SLIDE 7 -->
-    <section class="slide" id="slide-7" aria-label="Ucapan dan Doa" style="display:none">
-      <div class="a4 msg-form anim">
-        <h3 style="margin:0 0 12px 0">Ucapan & Doa</h3>
-        <form id="greetForm">
-          <input id="gname" placeholder="Nama Anda" required>
-          <textarea id="gmsg" rows="4" placeholder="Tulis ucapan & doa..." required></textarea>
-          <div style="display:flex;gap:8px;justify-content:center;margin-top:10px">
-            <button type="submit" style="padding:10px 18px;border-radius:10px;border:none;background:var(--accent);color:#fff;cursor:pointer">Kirim</button>
-            <button type="button" id="clearMsgs" style="padding:10px 12px;border-radius:10px;border:1px solid #ddd;background:#fff;cursor:pointer">Bersihkan</button>
-          </div>
-        </form>
-      </div>
-
-      <div class="msg-list" id="greetingsList" style="margin-top:18px"></div>
-    </section>
-
-    <!-- SLIDE 8 -->
-    <section class="slide" id="slide-8" aria-label="Penutup" style="display:none">
-      <div class="overlay-dark" aria-hidden="true"></div>
-
-      <div class="thanks-box anim a4" style="text-align:center">
-        <img src="pasangan.png" alt="Pasangan" class="thanks-photo" style="display:block;margin:0 auto">
-        <div class="thanks-name">Lina & Faqih</div>
-        <div style="margin-top:10px;font-size:18px">Terima Kasih</div>
-        <div style="margin-top:12px;font-size:13px;color:#555">Semoga do'a dan restu Bapak/Ibu menjadi berkah bagi kami.</div>
-      </div>
-    </section>
-
-  </div><!-- /viewport -->
-
-  <!-- Controls bottom (hidden until open) -->
-  <div class="controls" id="controls" aria-hidden="true">
-    <button class="icon-btn" id="toggleAuto" title="Pause/Play Auto-scroll">⏯</button>
-    <button class="icon-btn" id="muteBtn" title="Mute/Unmute Music">🔈</button>
-    <button class="icon-btn" id="btnTop" title="Kembali ke Atas">🏠</button>
+  <!-- Nav -->
+  <div id="nav-controls">
+    <button onclick="toggleScroll()">⏸️</button>
+    <button onclick="toggleMusic()">🔊</button>
+    <button onclick="scrollToTop()">🏠</button>
   </div>
 
-  <!-- Snow canvas -->
-  <canvas id="snowCanvas"></canvas>
-
-  <!-- Audio element (preload but will only play on user gesture) -->
-  <audio id="bgMusic" src="lagu.mp3" loop preload="auto"></audio>
+  <audio id="bgm" src="lagu.mp3" loop></audio>
 
   <script>
-    /***********************
-     * Initialization
-     ***********************/
-    const viewport = document.getElementById('viewport');
-    const lockLayer = document.getElementById('lockLayer');
-    const openBtn = document.getElementById('openInvite');
-    const controls = document.getElementById('controls');
-    const bgMusic = document.getElementById('bgMusic');
+    const slides = document.querySelectorAll("section");
+    let autoScroll;
+    let isScrolling = true;
 
-    // show recipient name from URL ?to=
-    const params = new URLSearchParams(location.search);
-    const recipient = params.get('to') || params.get('nama') || params.get('kepada') || '';
-    if(recipient) document.getElementById('toName').textContent = decodeURIComponent(recipient);
-
-    // list of slide elements (we will show/hide as per earlier UI)
-    const slides = {
-      1: document.getElementById('slide-1'),
-      2: document.getElementById('slide-2'),
-      3: document.getElementById('slide-3'),
-      4: document.getElementById('slide-4'),
-      5: document.getElementById('slide-5'),
-      6: document.getElementById('slide-6'),
-      7: document.getElementById('slide-7'),
-      8: document.getElementById('slide-8'),
-    };
-
-    // Ensure only slide 1 visible initially (others display:none)
-    for(let i=2;i<=8;i++){ slides[i].style.display = 'none'; }
-
-    /***********************
-     * Open Invitation (user gesture)
-     ***********************/
-    openBtn.addEventListener('click', async function(){
-      // remove lock overlay and allow scrolling
-      lockLayer.style.display = 'none';
-      document.documentElement.style.overflow = ''; // allow page scroll
-      // show slide 2
-      slides[2].style.display = '';
-      // animate in-slide elements by adding .in (IntersectionObserver also handles later)
-      setTimeout(()=>{ markInView(); }, 150);
-      // play music (gesture)
-      try { await bgMusic.play(); } catch(e){ console.warn('Audio play blocked', e); }
-      // show controls
-      controls.classList.add('show');
-      controls.setAttribute('aria-hidden','false');
-      // show slide3 later (we keep all slides stacked; user can scroll)
-      // reveal slide3..8 but keep them display none until they enter viewport via observer
-      for(let i=3;i<=8;i++){ slides[i].style.display = ''; }
-      // start auto scroll gentle after short delay
+    function openInvitation(){
+      document.getElementById('slide1').classList.add('hidden');
+      slides.forEach((s,i)=>{if(i>0)s.classList.remove('hidden')});
+      document.getElementById('bgm').play();
+      document.getElementById('nav-controls').classList.add('show');
       startAutoScroll();
-    });
-
-    /***********************
-     * Countdown (14 Dec 2025 08:00 WIB -> 01:00 UTC)
-     ***********************/
-    function updateCountdown(){
-      const targetUTCms = Date.UTC(2025,11,14,1,0,0); // months 0-indexed
-      const now = Date.now();
-      let diff = Math.max(0, targetUTCms - now);
-      const days = Math.floor(diff / (1000*60*60*24));
-      diff -= days*(1000*60*60*24);
-      const hours = Math.floor(diff / (1000*60*60));
-      diff -= hours*(1000*60*60);
-      const minutes = Math.floor(diff / (1000*60));
-      diff -= minutes*(1000*60);
-      const seconds = Math.floor(diff/1000);
-      document.getElementById('cd-days').textContent = days;
-      document.getElementById('cd-hours').textContent = String(hours).padStart(2,'0');
-      document.getElementById('cd-minutes').textContent = String(minutes).padStart(2,'0');
-      document.getElementById('cd-seconds').textContent = String(seconds).padStart(2,'0');
     }
-    updateCountdown();
-    setInterval(updateCountdown,1000);
-
-    /***********************
-     * Save to calendar (.ics generation)
-     ***********************/
-    document.getElementById('saveCalendar').addEventListener('click', function(){
-      const title = 'Akad & Resepsi — Lina & Faqih';
-      const desc = 'Undangan pernikahan Lina & Faqih — Rumah Lina';
-      const start = '20251214T010000Z';
-      const end = '20251214T040000Z';
-      const ics = `BEGIN:VCALENDAR\nVERSION:2.0\nBEGIN:VEVENT\nUID:${Date.now()}@linafaqih\nDTSTAMP:${start}\nDTSTART:${start}\nDTEND:${end}\nSUMMARY:${title}\nDESCRIPTION:${desc}\nEND:VEVENT\nEND:VCALENDAR`;
-      const blob = new Blob([ics],{type:'text/calendar;charset=utf-8'});
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a'); a.href = url; a.download = 'lina-faqih.ics'; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
-    });
-
-    /***********************
-     * Copy rekening
-     ***********************/
-    document.querySelectorAll('.copy-btn').forEach(b=>{
-      b.addEventListener('click', ()=> {
-        const text = b.dataset.acc || b.getAttribute('data-acc') || b.textContent;
-        navigator.clipboard.writeText(text).then(()=>{ alert('Nomor rekening disalin: ' + text); }).catch(()=>{ prompt('Salin manual:', text); });
-      });
-    });
-
-    /***********************
-     * Greetings (localStorage)
-     ***********************/
-    const greetForm = document.getElementById('greetForm');
-    const gList = document.getElementById('greetingsList');
-
-    function loadMessages(){
-      const arr = JSON.parse(localStorage.getItem('greetings')||'[]');
-      gList.innerHTML = '';
-      arr.reverse().forEach(it=>{
-        const el = document.createElement('div'); el.className='msg-item';
-        el.innerHTML = `<strong style="color:var(--accent)">${escapeHtml(it.name)}</strong><div style="margin-top:6px">${escapeHtml(it.msg)}</div>`;
-        gList.appendChild(el);
-      });
-    }
-    loadMessages();
-
-    greetForm && greetForm.addEventListener('submit', function(e){
-      e.preventDefault();
-      const name = document.getElementById('gname').value.trim();
-      const msg = document.getElementById('gmsg').value.trim();
-      if(!name || !msg) return alert('Isi nama & ucapan');
-      const arr = JSON.parse(localStorage.getItem('greetings')||'[]');
-      arr.push({name:name,msg:msg,ts:Date.now()});
-      localStorage.setItem('greetings', JSON.stringify(arr));
-      document.getElementById('gname').value=''; document.getElementById('gmsg').value='';
-      loadMessages();
-    });
-
-    document.getElementById('clearMsgs').addEventListener('click', ()=>{
-      if(confirm('Hapus semua ucapan dari localStorage?')){ localStorage.removeItem('greetings'); loadMessages(); }
-    });
-
-    function escapeHtml(s){ return (s+'').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
-
-    /***********************
-     * Auto-scroll gentle
-     ***********************/
-    let auto = true;
-    let autoTimer = null;
-    const SCROLL_STEP = 0.6; // px per tick
-    const SCROLL_INTERVAL_MS = 40;
 
     function startAutoScroll(){
-      stopAutoScroll();
-      autoTimer = setInterval(()=>{
-        if(!auto) return;
-        // only auto-scroll if user near not at bottom
-        const max = viewport.scrollHeight - viewport.clientHeight;
-        if(Math.abs(viewport.scrollTop - max) < 10){ stopAutoScroll(); return; }
-        viewport.scrollBy({ top: SCROLL_STEP, left:0, behavior: 'smooth' });
-      }, SCROLL_INTERVAL_MS);
+      autoScroll = setInterval(()=>{
+        window.scrollBy({top:1, behavior:'smooth'});
+      },50);
     }
-    function stopAutoScroll(){ if(autoTimer){ clearInterval(autoTimer); autoTimer=null; } }
 
-    // toggle button
-    document.getElementById('toggleAuto').addEventListener('click', ()=>{
-      auto = !auto;
-      document.getElementById('toggleAuto').textContent = auto ? '⏯' : '⏸';
-      if(auto) startAutoScroll(); else stopAutoScroll();
-    });
+    function toggleScroll(){
+      if(isScrolling){
+        clearInterval(autoScroll);
+        isScrolling=false;
+      } else {
+        startAutoScroll();
+        isScrolling=true;
+      }
+    }
 
-    // pause auto when user scrolls manually for a while
-    let lastManual = 0;
-    viewport.addEventListener('scroll', ()=> {
-      lastManual = Date.now();
-      if(auto){ auto = false; document.getElementById('toggleAuto').textContent='⏸'; }
-      // resume after 2.6s of idle
-      setTimeout(()=>{ if(Date.now() - lastManual > 2600){ auto = true; document.getElementById('toggleAuto').textContent='⏯'; } }, 2700);
-    });
+    function toggleMusic(){
+      const music=document.getElementById('bgm');
+      if(music.paused){music.play();} else {music.pause();}
+    }
 
-    /***********************
-     * Mute/unmute music control
-     ***********************/
-    const muteBtn = document.getElementById('muteBtn');
-    let muted = false;
-    muteBtn.addEventListener('click', ()=>{
-      muted = !muted; bgMusic.muted = muted; muteBtn.textContent = muted ? '🔇' : '🔈';
-    });
+    function scrollToTop(){window.scrollTo({top:0,behavior:'smooth'});}
 
-    /***********************
-     * Controls: scroll top
-     ***********************/
-    document.getElementById('btnTop').addEventListener('click', ()=>{ viewport.scrollTo({top:0,behavior:'smooth'}); });
+    // countdown
+    const eventDate = new Date("Dec 14, 2025 08:00:00").getTime();
+    const countdownEl = document.getElementById("countdown");
+    function updateCountdown(){
+      const now = new Date().getTime();
+      const diff = eventDate - now;
+      const days = Math.floor(diff/(1000*60*60*24));
+      const hours = Math.floor((diff%(1000*60*60*24))/(1000*60*60));
+      const minutes = Math.floor((diff%(1000*60*60))/(1000*60));
+      const seconds = Math.floor((diff%(1000*60))/1000);
+      countdownEl.innerHTML = `
+        <div class="count-box"><span>${days}</span><small>Days</small></div>
+        <div class="count-box"><span>${hours}</span><small>Hours</small></div>
+        <div class="count-box"><span>${minutes}</span><small>Minutes</small></div>
+        <div class="count-box"><span>${seconds}</span><small>Seconds</small></div>
+      `;
+    }
+    setInterval(updateCountdown,1000);
 
-    /***********************
-     * IntersectionObserver for animations (show .anim elements when in viewport)
-     ***********************/
-    const io = new IntersectionObserver((entries)=>{
-      entries.forEach(en=>{
-        if(en.isIntersecting){
-          en.target.classList.add('in');
-        }
-      });
-    }, {threshold:0.15});
+    // guest name
+    const params = new URLSearchParams(window.location.search);
+    const guest = params.get('to') || '';
+    if(guest){document.getElementById('guest').innerText="Kepada: "+guest;}
 
-    // observe all anim elements we created
-    document.querySelectorAll('.anim').forEach(el=> io.observe(el));
+    // copy rekening
+    function copyRek(no){
+      navigator.clipboard.writeText(no);
+      alert("Nomor rekening "+no+" berhasil dicopy!");
+    }
 
-    // helper to mark initial ones in view after open
-    function markInView(){ document.querySelectorAll('.anim').forEach(el=>{ const r = el.getBoundingClientRect(); if(r.top < window.innerHeight) el.classList.add('in'); })}
+    // ucapan
+    function addMessage(e){
+      e.preventDefault();
+      const nama=document.getElementById('nama').value;
+      const ucapan=document.getElementById('ucapan').value;
+      const msgDiv=document.getElementById('messages');
+      const p=document.createElement('p');
+      p.innerHTML="<b>"+nama+"</b>: "+ucapan;
+      msgDiv.appendChild(p);
+      e.target.reset();
+    }
 
-    /***********************
-     * Snow effect using canvas
-     ***********************/
-    const canvas = document.getElementById('snowCanvas');
-    const ctx = canvas.getContext('2d');
-    let W = 0, H = 0;
-    function resizeCanvas(){ W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; }
-    window.addEventListener('resize', resizeCanvas);
+    // Snowfall
+    const canvas=document.getElementById("snowfall");
+    const ctx=canvas.getContext("2d");
+    let snowflakes=[];
+    function resizeCanvas(){canvas.width=window.innerWidth; canvas.height=window.innerHeight;}
+    window.addEventListener("resize",resizeCanvas);
     resizeCanvas();
-    const flakes = [];
-    for(let i=0;i<140;i++) flakes.push({x:Math.random()*W, y:Math.random()*H, r:Math.random()*3+1, d:Math.random()*2});
-    function drawSnow(){
-      ctx.clearRect(0,0,W,H);
-      ctx.fillStyle = 'rgba(255,255,255,0.85)';
-      flakes.forEach(f=>{
-        ctx.beginPath(); ctx.arc(f.x,f.y,f.r,0,Math.PI*2); ctx.fill();
-        f.y += Math.pow(f.r,1.2)+0.4;
-        f.x += Math.sin(f.d);
-        if(f.y > H){ f.y = -10; f.x = Math.random()*W; }
-      });
-      requestAnimationFrame(drawSnow);
+    function createSnowflakes(){
+      const x=Math.random()*canvas.width;
+      const y=Math.random()*canvas.height;
+      const radius=Math.random()*4+1;
+      const speed=Math.random()*1+0.5;
+      snowflakes.push({x,y,radius,speed});
     }
-    drawSnow();
-
-    /***********************
-     * Reveal behavior & initial setup
-     ***********************/
-    // reveal slide 2..8 only after open (we set display:'' earlier in open). If user refresh and wants to test without open, we still keep lock active.
-    // Start: lock layer visible (prevent scroll). Already placed.
-
-    // When open: start auto-scroll and show controls (handled on click)
-    function startAutoAfterOpenCheck(){ if(!autoTimer) startAutoScroll(); }
-
-    // small accessibility: pause music on pagehide
-    window.addEventListener('pagehide', ()=>{ try{ bgMusic.pause(); stopAutoScroll(); }catch(e){} });
-
-    /***********************
-     * Extra: ensure slides shown when user scrolls (for first-time preview)
-     ***********************/
-    // If user wants to preview all without clicking open (developer mode), they can remove lockLayer using console.
-    // For normal behavior we keep lock until open is clicked.
-
+    function drawSnowflakes(){
+      ctx.clearRect(0,0,canvas.width,canvas.height);
+      ctx.fillStyle="white";
+      ctx.beginPath();
+      for(const flake of snowflakes){
+        ctx.moveTo(flake.x,flake.y);
+        ctx.arc(flake.x,flake.y,flake.radius,0,Math.PI*2);
+      }
+      ctx.fill();
+      updateSnowflakes();
+    }
+    function updateSnowflakes(){
+      for(const flake of snowflakes){
+        flake.y+=flake.speed;
+        if(flake.y>canvas.height){flake.y=0; flake.x=Math.random()*canvas.width;}
+      }
+    }
+    setInterval(createSnowflakes,200);
+    setInterval(drawSnowflakes,50);
   </script>
 </body>
 </html>
