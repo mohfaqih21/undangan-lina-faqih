@@ -2,191 +2,216 @@
 <html lang="id">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Undangan — Lina & Faqih</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Undangan Lina & Faqih</title>
+
+  <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:wght@400;700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
 
   <style>
     :root{
-      --accent:#2366b3; /* biru */
-      --glass: rgba(255,255,255,0.78);
-      --card: rgba(255,255,255,0.9);
+      --accent:#2366b3;
+      --card: rgba(255,255,255,0.92);
       --muted:#f3f6fb;
+      --glass: rgba(255,255,255,0.75);
       --radius:14px;
     }
     *{box-sizing:border-box}
-    html,body{height:100%;margin:0;font-family:Poppins,system-ui,Arial;background:#0b0f14;color:#0d1117}
+    html,body{height:100%;margin:0;font-family:Poppins,system-ui,Arial;background:#0b0f14;color:#111;overflow:hidden}
+    a{color:inherit}
+    button{font-family:inherit}
 
-    /* viewport / flow */
-    .viewport{height:100vh;overflow-y:auto;scroll-behavior:smooth;scroll-snap-type:y mandatory}
-    .slide{min-height:100vh;display:flex;align-items:center;justify-content:center;flex-direction:column;padding:28px;position:relative;scroll-snap-align:start}
+    /* viewport: stacked slides vertical */
+    #viewport{height:100vh;overflow-y:auto;scroll-behavior:smooth;scroll-snap-type:y mandatory}
+    .slide{min-height:100vh;padding:22px;display:flex;align-items:center;justify-content:center;flex-direction:column;position:relative;scroll-snap-align:start}
+    .a4{width:820px;max-width:94%;border-radius:12px;padding:18px}
 
-    /* A4 transparent frame styling (used on slidess) */
-    .a4-frame{width:820px;max-width:94%;background:transparent;padding:20px;border-radius:12px}
+    /* Universal fade-up anim helper (start hidden, add .in to show) */
+    .anim{opacity:0;transform:translateY(16px);transition:opacity .7s ease, transform .7s ease}
+    .anim.in{opacity:1;transform:none}
 
-    /* common image helpers */
-    img{display:block;max-width:100%;height:auto}
+    /* small screens */
+    @media(max-width:700px){
+      .a4{padding:12px;width:92%}
+    }
 
-    /* ==== SLIDE 1 ==== */
-    .cover{background:url('bgistana.jpg') center/cover no-repeat}
-    .cover .panel{width:820px;max-width:92%;background:linear-gradient(180deg, rgba(255,255,255,0.95), rgba(255,255,255,0.85));padding:26px;border-radius:14px;text-align:center;box-shadow:0 8px 30px rgba(2,6,23,0.45)}
-    .cover .couple{width:220px;height:220px;border-radius:12px;object-fit:cover}
-    .cover .names{font-family:'Great Vibes',cursive;color:var(--accent);font-size:46px;margin-top:6px}
-    .cover p{margin:10px 0}
-    .cover .to-name{font-weight:600;margin-top:18px}
-    .open-btn{display:inline-flex;align-items:center;gap:10px;margin-top:18px;padding:12px 18px;border-radius:999px;background:var(--accent);color:white;cursor:pointer;font-weight:600}
-    .badge-top{position:absolute;right:18px;top:18px;width:64px}
-    .badge-bottom{position:absolute;left:18px;bottom:18px;width:64px}
+    /* ---------- SLIDE 1 (COVER) ---------- */
+    #slide-1{background:url('bgistana.jpg') center/cover no-repeat; background-size:cover;display:flex;align-items:center;justify-content:center}
+    #slide-1 .a4{background:linear-gradient(180deg, rgba(255,255,255,0.96), rgba(255,255,255,0.9));text-align:center;box-shadow:0 10px 40px rgba(0,0,0,0.35)}
+    #slide-1 .badge-top{position:absolute;right:18px;top:18px;width:64px}
+    #slide-1 .badge-bottom{position:absolute;left:18px;bottom:18px;width:64px}
+    .cover-photo{width:220px;height:220px;object-fit:cover;border-radius:12px}
+    .cover-name{font-family:'Great Vibes',cursive;color:var(--accent);font-size:48px;margin-top:10px}
+    .cover-text{font-size:15px;margin:12px 0;line-height:1.5;color:#222}
+    .to-line{font-weight:600;margin-top:14px;color:#2b2b2b}
+    .open-btn{display:inline-flex;align-items:center;gap:10px;margin-top:20px;padding:12px 18px;border-radius:999px;background:var(--accent);color:white;cursor:pointer;border:none}
+    /* prevent interaction before open - overlay */
+    #lockLayer{position:fixed;inset:0;background:rgba(0,0,0,0.0);z-index:80;pointer-events:auto}
 
-    /* LOCK overlay while closed */
-    .locked{position:absolute;inset:0;background:linear-gradient(0deg, rgba(0,0,0,0.35), rgba(0,0,0,0.18));display:flex;align-items:center;justify-content:center;z-index:40}
-
-    /* ==== SLIDE 2 ==== */
-    .happy{background:url('suasana.jpg') center/cover no-repeat;padding-top:60px}
-    .happy .hero{position:relative;width:100%;max-width:1100px;margin:0 auto}
-    .happy .happy-text{font-family:'Playfair Display',serif;font-size:46px;color:white;text-shadow:0 6px 18px rgba(0,0,0,0.6)}
-    .center-photo{display:block;margin:18px auto;width:480px;max-width:86%;border-radius:12px}
-    .castle{position:absolute;left:50%;transform:translateX(-50%);top:8%;width:120%;opacity:0.28;pointer-events:none}
-    .pilar-left,.pilar-right{position:absolute;top:6%;width:96px;height:320px;pointer-events:none}
-    .pilar-left{left:6%}
-    .pilar-right{right:6%}
-
-    /* countdown */
-    .countdown{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;justify-items:center;margin-top:12px}
-    .cd-box{background:var(--card);padding:12px;border-radius:12px;min-width:86px;box-shadow:0 6px 18px rgba(2,6,23,0.12)}
-    .cd-num{font-size:28px;font-weight:700}
+    /* ---------- SLIDE 2 (HAPPY WEDDING) ---------- */
+    #slide-2{background:url('suasana.jpg') center/cover no-repeat;color:#fff;overflow:hidden}
+    #slide-2 .hero{position:relative;width:100%;max-width:1100px;margin:0 auto;text-align:center;padding:18px}
+    .happy-text{font-family:'Playfair Display',serif;font-size:44px;text-shadow:0 8px 30px rgba(0,0,0,0.6)}
+    .castle{position:absolute;left:50%;transform:translateX(-50%);top:6%;width:125%;opacity:0.22;pointer-events:none;z-index:0}
+    .pilar-left,.pilar-right{position:absolute;top:6%;width:110px;height:320px;pointer-events:none;z-index:2}
+    .pilar-left{left:2%}
+    .pilar-right{right:2%}
+    .center-photo{position:relative;z-index:3;width:480px;max-width:86%;border-radius:10px;display:block;margin:18px auto;object-fit:cover}
+    /* bottom gradient mask for photo to fade into overlay */
+    .photo-mask{position:absolute;left:50%;transform:translateX(-50%);bottom:0;width:100%;max-width:480px;height:150px;background:linear-gradient(180deg, rgba(0,0,0,0), rgba(0,0,0,0.7));z-index:4;border-radius:0 0 18px 18px;pointer-events:none}
+    .couple-title{font-family:'Great Vibes',cursive;font-size:34px;color:var(--accent);margin-top:10px;z-index:5}
+    .countdown{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;justify-items:center;margin-top:14px;z-index:5}
+    .cd-box{background:linear-gradient(180deg, rgba(255,255,255,0.95), rgba(255,255,255,0.88));color:#111;padding:12px;border-radius:12px;min-width:88px;box-shadow:0 8px 20px rgba(0,0,0,0.12)}
+    .cd-num{font-size:26px;font-weight:700}
     .cd-label{font-size:12px;margin-top:6px}
-    .save-cal{display:inline-block;margin-top:12px;padding:10px 14px;border-radius:10px;background:var(--muted);cursor:pointer}
-    .bird-vid{position:absolute;top:6%;left:50%;transform:translateX(-50%);width:120px;height:60px;pointer-events:none}
+    .save-cal{display:inline-block;margin-top:12px;padding:10px 14px;border-radius:10px;background:var(--muted);cursor:pointer;z-index:5}
+    .bird-vid{position:absolute;top:4%;left:50%;transform:translateX(-50%);width:140px;height:72px;pointer-events:none;z-index:22}
 
-    /* ==== SLIDE 3 ==== */
-    .pair{background:url('bg2.png') center/cover no-repeat;padding:48px 20px}
-    .pair .row{display:flex;gap:16px;align-items:center;justify-content:center;flex-wrap:wrap;max-width:980px;margin:0 auto}
-    .person{background:var(--card);padding:14px;border-radius:12px;display:flex;gap:12px;align-items:center;box-shadow:0 10px 30px rgba(2,6,23,0.12)}
-    .person img{width:120px;height:120px;object-fit:cover;border-radius:12px;box-shadow:0 8px 22px rgba(0,0,0,0.15)}
-    .ampersand{font-family:'Great Vibes',cursive;font-size:72px;margin:12px 0}
-
-    /* ==== SLIDE 4 ==== */
-    .quran{background:url('bgistana2.jpg') center/cover no-repeat;padding:48px}
-    .verse{background:var(--glass);padding:20px;border-radius:12px;max-width:780px;text-align:center;box-shadow:0 8px 22px rgba(0,0,0,0.14)}
-    .arab{font-size:26px;font-family:serif}
-
-    /* ==== SLIDE 5 ==== */
-    .white{background:linear-gradient(180deg,#fff,#fbfdff);padding:48px}
-    .box{background:var(--card);padding:18px;border-radius:14px;max-width:520px;margin:0 auto;text-align:center}
-
-    /* ==== SLIDE 6 ==== */
-    .gift{background:url('bg2.png') center/cover no-repeat;padding:48px}
-    .account{background:rgba(255,255,255,0.92);padding:14px;border-radius:12px;display:inline-block}
-
-    /* ==== SLIDE 7 ==== */
-    .greet{padding:36px}
-    .greet-list{max-width:900px;margin:0 auto}
-    .greet-item{background:var(--card);padding:12px;border-radius:10px;margin-bottom:10px}
-
-    /* ==== SLIDE 8 ==== */
-    .closing{background:url('bgistana.jpg') center/cover no-repeat;padding:48px}
-    .thanks-box{background:linear-gradient(180deg, rgba(255,255,255,0.94), rgba(255,255,255,0.88));padding:22px;border-radius:14px;text-align:center}
-
-    /* bottom controls */
-    .controls{position:fixed;left:50%;transform:translateX(-50%);bottom:18px;display:flex;gap:10px;background:rgba(0,0,0,0.36);padding:8px;border-radius:999px;backdrop-filter:blur(6px);z-index:120}
-    .icon-btn{background:transparent;border:none;color:white;padding:8px;border-radius:10px;cursor:pointer;display:flex;align-items:center;gap:8px}
-
-    /* responsive tweaks */
     @media(max-width:900px){
-      .cover .panel{padding:18px}
-      .cover .names{font-size:36px}
       .center-photo{width:360px}
-      .person img{width:96px;height:96px}
-      .ampersand{font-size:54px}
       .countdown{grid-template-columns:repeat(2,1fr)}
     }
     @media(max-width:480px){
-      .cover .panel{padding:14px}
-      .cover .couple{width:160px;height:160px}
-      .happy .happy-text{font-size:28px}
+      .happy-text{font-size:28px}
       .center-photo{width:280px}
-      .cd-num{font-size:22px}
-      .ampersand{font-size:46px}
-      .a4-frame{padding:12px}
-      .controls{bottom:12px}
     }
 
-    /* small animation helpers */
-    .fade-up{opacity:0;transform:translateY(18px);transition:all .8s cubic-bezier(.2,.9,.2,1)}
-    .in-view{opacity:1;transform:none}
+    /* ---------- SLIDE 3 (PAIRS) ---------- */
+    #slide-3{background:url('bg2.png') center/cover no-repeat;padding:48px 18px;color:#111}
+    .bismillah{font-size:22px;margin-bottom:12px;font-family:serif}
+    .invite-text{max-width:840px;margin:0 auto 18px;line-height:1.6}
+    .pair-row{display:flex;gap:20px;align-items:center;justify-content:center;flex-wrap:wrap;max-width:980px;margin-top:18px}
+    .person{background:var(--card);padding:12px;border-radius:12px;display:flex;gap:12px;align-items:center;box-shadow:0 12px 30px rgba(0,0,0,0.12)}
+    .person img{width:120px;height:120px;object-fit:cover;border-radius:12px;box-shadow:0 12px 26px rgba(0,0,0,0.15)}
+    .ampersand{font-family:'Great Vibes',cursive;font-size:72px;margin:16px 0;color:var(--accent)}
+
+    /* ---------- SLIDE 4 (QURAN) ---------- */
+    #slide-4{background:url('bgistana2.jpg') center/cover no-repeat;padding:48px;color:#111}
+    #slide-4::before{content:'';position:absolute;inset:0;background:rgba(255,255,255,0.6)}
+    #slide-4 .verse{position:relative;z-index:3;background:var(--glass);padding:22px;border-radius:12px;max-width:780px;text-align:center;box-shadow:0 12px 30px rgba(0,0,0,0.12)}
+
+    /* ---------- SLIDE 5 (SAVE THE DATE) ---------- */
+    #slide-5{background:linear-gradient(180deg,#fff,#fbfdff);padding:48px}
+    .save-box{background:linear-gradient(135deg,#fff,#e6f0ff);padding:28px;border-radius:16px;box-shadow:0 10px 30px rgba(0,0,0,0.08);max-width:520px;text-align:center}
+    .save-box h3{font-family:'Great Vibes',cursive;font-size:30px;color:#2c3e50;margin-bottom:8px}
+    .map-btn{display:inline-block;margin-top:12px;padding:10px 14px;border-radius:10px;background:#3498db;color:#fff;text-decoration:none}
+
+    /* ---------- SLIDE 6 (TITIP HADIAH) ---------- */
+    #slide-6{background:url('bg2.png') center/cover;padding:48px}
+    .gift-card{background:var(--card);border-radius:16px;padding:22px;max-width:720px;box-shadow:0 12px 30px rgba(0,0,0,0.12)}
+    .account-row{display:flex;gap:12px;align-items:center;justify-content:space-between;margin-top:12px;padding:10px;border-radius:12px;background:#fff;border:2px solid rgba(35,102,179,0.08)}
+    .account-left{display:flex;flex-direction:column;align-items:flex-start}
+    .copy-btn{background:var(--accent);border:none;color:#fff;padding:8px 12px;border-radius:8px;cursor:pointer}
+
+    /* ---------- SLIDE 7 (UCAPAN) ---------- */
+    #slide-7{background:url('bg2.png') center/cover;padding:36px}
+    .msg-form{background:var(--card);padding:16px;border-radius:12px;max-width:760px;width:94%;box-shadow:0 8px 24px rgba(0,0,0,0.1)}
+    .msg-form input,.msg-form textarea{width:100%;padding:10px;margin-top:10px;border-radius:10px;border:1px solid #ddd;font-size:14px}
+    .msg-list{max-width:760px;width:94%;margin-top:18px}
+    .msg-item{background:rgba(255,255,255,0.96);padding:12px;border-radius:10px;margin-bottom:10px;box-shadow:0 6px 18px rgba(0,0,0,0.06)}
+
+    /* ---------- SLIDE 8 (PENUTUP) ---------- */
+    #slide-8{background:url('bgistana.jpg') center/cover;padding:48px;display:flex;align-items:center;justify-content:center}
+    #slide-8 .overlay-dark{position:absolute;inset:0;background:linear-gradient(180deg, rgba(0,0,0,0.28), rgba(0,0,0,0.18));z-index:1}
+    .thanks-box{position:relative;z-index:3;background:linear-gradient(180deg, rgba(255,255,255,0.94), rgba(255,255,255,0.9));padding:22px;border-radius:14px;text-align:center;box-shadow:0 12px 30px rgba(0,0,0,0.12)}
+    .thanks-photo{width:180px;height:180px;object-fit:cover;border-radius:12px;box-shadow:0 12px 30px rgba(0,0,0,0.16)}
+    .thanks-name{font-family:'Great Vibes',cursive;font-size:36px;color:var(--accent);margin-top:10px}
+
+    /* ---------- Controls bottom (hidden until open) ---------- */
+    .controls{position:fixed;left:50%;transform:translateX(-50%);bottom:18px;display:flex;gap:10px;background:rgba(0,0,0,0.36);padding:8px;border-radius:999px;backdrop-filter:blur(6px);z-index:120;opacity:0;transition:opacity .45s}
+    .controls.show{opacity:1}
+    .icon-btn{background:transparent;border:none;color:white;padding:8px;border-radius:10px;cursor:pointer;display:flex;align-items:center;gap:8px;font-size:18px}
+
+    /* Snow canvas absolute full screen */
+    #snowCanvas{position:fixed;left:0;top:0;pointer-events:none;z-index:60}
+
+    /* small responsive tweaks */
+    @media(max-width:720px){
+      .cover-name{font-size:34px}
+      .cover-photo{width:160px;height:160px}
+      .couple-title{font-size:26px}
+      .cd-num{font-size:20px}
+      .thanks-photo{width:140px;height:140px}
+      .ampersand{font-size:54px}
+    }
   </style>
 </head>
 <body>
 
-  <div class="viewport" id="viewport">
+  <!-- viewport stack -->
+  <div id="viewport">
 
-    <!-- SLIDE 1: COVER (locked until open) -->
-    <section class="slide cover" id="slide-1">
-      <img class="badge-top" src="list1.png" alt="decoration">
-      <img class="badge-bottom" src="list2.png" alt="decoration">
-      <div class="a4-frame panel">
-        <img src="pasangan.png" class="couple" alt="Pasangan">
-        <div class="names">Lina &amp; Faqih</div>
-        <p>Tanpa Mengurangi Rasa Hormat, Kami Mengundang Bapak/Ibu/Saudara/i untuk Hadir di Acara Kami</p>
-        <div class="to-name">Kepada: <span id="toName">Bapak Budi</span></div>
-        <div style="height:14px"></div>
-        <button class="open-btn" id="openBtn">📩 Buka Undangan</button>
+    <!-- SLIDE 1 -->
+    <section class="slide" id="slide-1" aria-label="Pembuka">
+      <img src="list1.png" class="badge-top" alt="dekorasi kanan atas">
+      <img src="list2.png" class="badge-bottom" alt="dekorasi kiri bawah">
+
+      <div class="a4 anim" id="coverPanel" style="text-align:center">
+        <img src="pasangan.png" alt="Pasangan" class="cover-photo anim" style="display:block;margin:0 auto">
+        <div class="cover-name anim" style="margin-top:8px">Lina & Faqih</div>
+        <p class="cover-text anim">Tanpa Mengurangi Rasa Hormat, Kami Mengundang Bapak/Ibu/Saudara/i untuk Hadir di Acara Kami</p>
+        <div class="to-line anim">Kepada: <span id="toName">Bapak Budi</span></div>
+
+        <button id="openInvite" class="open-btn anim" aria-label="Buka Undangan">✉️ Buka Undangan</button>
       </div>
-      <div class="locked" id="lockLayer">
-        <!-- ensures nothing clickable until open -->
+
+      <!-- lock overlay prevents scrolling/interactions beyond open -->
+      <div id="lockLayer" aria-hidden="true"></div>
+    </section>
+
+    <!-- SLIDE 2 -->
+    <section class="slide" id="slide-2" aria-label="Happy Wedding" style="display:none">
+      <div class="hero a4" style="text-align:center">
+        <div class="happy-text anim">Happy Wedding</div>
+
+        <img src="istana.png" class="castle" aria-hidden="true" alt="">
+        <img src="pilar.png" class="pilar-left" aria-hidden="true" alt="">
+        <img src="pilar.png" class="pilar-right" aria-hidden="true" alt="">
+        <img src="pasangantbg.png" class="center-photo anim" alt="Pasangan">
+
+        <!-- mask gradient at bottom so image fades into content -->
+        <div class="photo-mask" aria-hidden="true"></div>
+
+        <div class="couple-title anim">Faqih & Lina</div>
+
+        <div class="countdown anim" id="countdown">
+          <div class="cd-box"><div class="cd-num" id="cd-days">0</div><div class="cd-label">Days</div></div>
+          <div class="cd-box"><div class="cd-num" id="cd-hours">00</div><div class="cd-label">Hours</div></div>
+          <div class="cd-box"><div class="cd-num" id="cd-minutes">00</div><div class="cd-label">Minutes</div></div>
+          <div class="cd-box"><div class="cd-num" id="cd-seconds">00</div><div class="cd-label">Seconds</div></div>
+        </div>
+
+        <div style="margin-top:10px" class="anim"><button id="saveCalendar" class="save-cal" aria-label="Save to calendar">Save to Calendar</button></div>
+
+        <div class="bird-vid" aria-hidden="true">
+          <video src="burung.mp4" autoplay loop muted playsinline></video>
+        </div>
       </div>
     </section>
 
-    <!-- SLIDE 2: HAPPY WEDDING -->
-    <section class="slide happy" id="slide-2">
-      <div class="hero a4-frame">
-        <div class="happy-text fade-up">Happy Wedding</div>
-        <img src="istana.png" class="castle" aria-hidden="true">
-        <img src="pilar.png" class="pilar-left" aria-hidden="true">
-        <img src="pilar.png" class="pilar-right" aria-hidden="true">
-        <img src="pasangantbg.png" class="center-photo fade-up" alt="Pasangan">
+    <!-- SLIDE 3 -->
+    <section class="slide" id="slide-3" aria-label="Profil Mempelai" style="display:none">
+      <div class="a4" style="text-align:center">
+        <div class="bismillah anim">بِسْمِ اللّٰهِ الرَّحْمٰنِ الرَّحِيْمِ</div>
+        <p class="invite-text anim">Atas Rahmat Allah SWT, Kami bermaksud mengundang Anda di acara kami. Merupakan suatu kehormatan dan kebahagiaan bagi kami sekeluarga, apabila Bapak/Ibu/Saudara/i berkenan hadir dan memberikan doa restu.</p>
 
-        <div class="fade-up" style="margin-top:12px">
-          <div style="font-family:'Great Vibes',cursive;font-size:34px;color:var(--accent)">Faqih &amp; Lina</div>
-        </div>
-
-        <div class="countdown" id="countdown">
-          <div class="cd-box fade-up"><div class="cd-num" id="days">0</div><div class="cd-label">Days</div></div>
-          <div class="cd-box fade-up"><div class="cd-num" id="hours">00</div><div class="cd-label">Hours</div></div>
-          <div class="cd-box fade-up"><div class="cd-num" id="minutes">00</div><div class="cd-label">Minutes</div></div>
-          <div class="cd-box fade-up"><div class="cd-num" id="seconds">00</div><div class="cd-label">Seconds</div></div>
-        </div>
-
-        <div style="text-align:center;margin-top:12px" class="fade-up"><button id="saveCal" class="save-cal">Save to Calendar</button></div>
-
-        <video src="burung.mp4" class="bird-vid" autoplay loop muted playsinline aria-hidden="true"></video>
-      </div>
-    </section>
-
-    <!-- SLIDE 3: PAIR PROFILE -->
-    <section class="slide pair" id="slide-3">
-      <div class="a4-frame">
-        <div class="arab fade-up" style="font-size:20px">بسم الله الرحمن الرحيم</div>
-        <p class="fade-up">Atas Rahmat Allah SWT, Kami bermaksud mengundang Anda di acara kami. Merupakan suatu kehormatan dan kebahagiaan bagi kami sekeluarga apabila Bapak/Ibu/Saudara/i berkenan hadir dan memberikan doa restu.</p>
-
-        <div class="row">
-          <div class="person fade-up">
+        <div class="pair-row">
+          <div class="person anim" style="animation-delay:.1s">
             <img src="lina.jpg" alt="Lina">
             <div style="text-align:left">
               <div style="font-family:'Great Vibes',cursive;font-size:20px">Marlina</div>
-              <div>Putri dari Bapak Lina &amp; Ummi Lina</div>
+              <div>Putri dari Bapak Lina & Ummi Lina</div>
               <div>Beralamat di Bogor</div>
             </div>
           </div>
 
-          <div class="ampersand fade-up">&amp;</div>
+          <div class="ampersand anim" style="animation-delay:.25s">&amp;</div>
 
-          <div class="person fade-up">
+          <div class="person anim" style="animation-delay:.4s">
             <img src="faqih.jpg" alt="Faqih">
             <div style="text-align:left">
               <div style="font-family:'Great Vibes',cursive;font-size:20px">Muhammad Faqih</div>
-              <div>Putra dari Abi Faqih &amp; Mama Faqih</div>
+              <div>Putra dari Abi Faqih & Mama Faqih</div>
               <div>Beralamat di Jakarta</div>
             </div>
           </div>
@@ -194,112 +219,168 @@
       </div>
     </section>
 
-    <!-- SLIDE 4: AYAT -->
-    <section class="slide quran" id="slide-4">
-      <img class="badge-top" src="list1.png" alt="decoration">
-      <img class="badge-bottom" src="list2.png" alt="decoration">
-      <div class="verse fade-up a4-frame">
-        <div class="arab">وَمِنْ ءَايَاتِهِ أَنْ خَلَقَ لَكُم مِّنْ أَنفُسِكُمْ أَزْوَٰجًا لِّتَسْكُنُوا۟ٓ إِلَيْهَا ...</div>
-        <div class="terjemah" style="margin-top:10px">Artinya: Dan di antara tanda-tanda-Nya ialah Dia menciptakan untukmu istri-istri dari jenismu sendiri... (Ar-Rum:21)</div>
+    <!-- SLIDE 4 -->
+    <section class="slide" id="slide-4" aria-label="Ayat Al-Qur'an" style="display:none">
+      <img src="list1.png" class="badge-top" alt="">
+      <img src="list2.png" class="badge-bottom" alt="">
+      <div class="a4 verse anim" style="text-align:center">
+        <div style="font-family:serif;font-size:26px;line-height:1.4">
+          وَمِنْ ءَايَاتِهِ أَنْ خَلَقَ لَكُمْ مِنْ أَنْفُسِكُمْ أَزْوَاجًا لِتَسْكُنُوا إِلَيْهَا وَجَعَلَ بَيْنَكُمْ مَوَدَّةً وَرَحْمَةً ۚ إِنَّ فِي ذَٰلِكَ لَآيَاتٍ لِّقَوْمٍ يَتَفَكَّرُونَ
+        </div>
+        <div style="margin-top:12px;line-height:1.6">
+          Artinya: Dan di antara tanda-tanda (kebesaran)-Nya ialah Dia menciptakan untukmu istri-istri dari jenismu sendiri, supaya kamu cenderung dan merasa tenteram kepadanya, dan dijadikan-Nya di antaramu rasa kasih dan sayang. Sesungguhnya pada yang demikian itu benar-benar terdapat tanda-tanda bagi kaum yang berpikir. (Ar-Rum:21)
+        </div>
       </div>
     </section>
 
-    <!-- SLIDE 5: SAVE THE DATE -->
-    <section class="slide white" id="slide-5">
-      <div class="box fade-up">
-        <div style="font-weight:700;margin-bottom:8px">Save The Date</div>
-        <div style="font-size:20px">Akad &amp; Resepsi Pernikahan</div>
-        <div>Desember</div>
-        <div style="font-weight:700;margin-top:8px">Minggu | 14 | 2025</div>
-        <div>08:00 WIB — Rumah Lina</div>
-        <div style="margin-top:10px"><a id="mapLink" href="https://maps.app.goo.gl/UWhk7CUqkBS6rZ3Z9" target="_blank">📍 Buka Map Lokasi</a></div>
+    <!-- SLIDE 5 -->
+    <section class="slide" id="slide-5" aria-label="Save The Date" style="display:none">
+      <div class="a4 save-box anim" style="text-align:center">
+        <h3>Save The Date</h3>
+        <div style="font-size:18px;margin-top:6px">Akad & Resepsi Pernikahan</div>
+        <div style="margin-top:8px">Desember</div>
+        <div style="font-weight:700;margin:12px 0">Minggu | 14 | 2025</div>
+        <div>Rumah Lina</div>
+        <a class="map-btn" id="mapLink" href="https://maps.app.goo.gl/UWhk7CUqkBS6rZ3Z9" target="_blank" rel="noopener">📍 Map Lokasi Acara</a>
       </div>
     </section>
 
-    <!-- SLIDE 6: TITIP HADIAH -->
-    <section class="slide gift" id="slide-6">
-      <div class="account fade-up a4-frame">
-        <div style="font-weight:700;margin-bottom:8px">Titip Hadiah</div>
-        <p>Doa restu Bapak/Ibu sekalian merupakan karunia yang sangat berarti bagi kami. Dan jika memberi merupakan ungkapan tanda kasih, Bapak/Ibu dapat memberi kado secara cashless. Terima kasih.</p>
-        <div style="display:flex;gap:12px;align-items:center;justify-content:center;margin-top:8px;flex-wrap:wrap">
-          <div style="text-align:left">
-            <div style="font-weight:700">BCA — 1234567890</div>
-            <div>a.n. Marlina</div>
+    <!-- SLIDE 6 -->
+    <section class="slide" id="slide-6" aria-label="Titip Hadiah" style="display:none">
+      <div class="a4 gift-card anim">
+        <h3 style="margin:0 0 6px 0">Titip Hadiah</h3>
+        <p style="margin:0 0 12px 0;line-height:1.6">
+          Doa restu Bapak/Ibu sekalian merupakan karunia yang sangat berarti bagi kami. Dan jika memberi merupakan ungkapan tanda kasih, Bapak/Ibu dapat memberi kado secara cashless. Terima kasih.
+        </p>
+
+        <div class="account-row">
+          <div class="account-left">
+            <div style="font-weight:700">BCA</div>
+            <div style="font-size:14px">1234567890</div>
+            <div style="font-size:13px;color:#555">a.n. Marlina</div>
           </div>
-          <button class="copy-btn" data-copy="BCA - 1234567890">Copy</button>
+          <div>
+            <button class="copy-btn" data-acc="BCA | 1234567890 | Marlina">Copy</button>
+          </div>
+        </div>
+
+        <div class="account-row" style="margin-top:12px">
+          <div class="account-left">
+            <div style="font-weight:700">Mandiri</div>
+            <div style="font-size:14px">9876543210</div>
+            <div style="font-size:13px;color:#555">a.n. Muhammad Faqih</div>
+          </div>
+          <div>
+            <button class="copy-btn" data-acc="Mandiri | 9876543210 | Muhammad Faqih">Copy</button>
+          </div>
         </div>
       </div>
     </section>
 
-    <!-- SLIDE 7: UCAPAN -->
-    <section class="slide" id="slide-7">
-      <div class="greet a4-frame">
-        <div style="font-weight:700;margin-bottom:12px">Ucapan & Doa</div>
-        <div class="greet-list" id="greetList">
-          <div class="greet-item">Semoga lancar acaranya — Bapak Budi</div>
-        </div>
-        <div style="margin-top:12px;display:flex;gap:8px;max-width:520px;margin-left:auto;margin-right:auto">
-          <input id="greetInput" placeholder="Tulis pesan & nama" style="flex:1;padding:10px;border-radius:8px;border:1px solid #ddd">
-          <button id="greetAdd" style="padding:10px;border-radius:8px">Kirim</button>
-        </div>
+    <!-- SLIDE 7 -->
+    <section class="slide" id="slide-7" aria-label="Ucapan dan Doa" style="display:none">
+      <div class="a4 msg-form anim">
+        <h3 style="margin:0 0 12px 0">Ucapan & Doa</h3>
+        <form id="greetForm">
+          <input id="gname" placeholder="Nama Anda" required>
+          <textarea id="gmsg" rows="4" placeholder="Tulis ucapan & doa..." required></textarea>
+          <div style="display:flex;gap:8px;justify-content:center;margin-top:10px">
+            <button type="submit" style="padding:10px 18px;border-radius:10px;border:none;background:var(--accent);color:#fff;cursor:pointer">Kirim</button>
+            <button type="button" id="clearMsgs" style="padding:10px 12px;border-radius:10px;border:1px solid #ddd;background:#fff;cursor:pointer">Bersihkan</button>
+          </div>
+        </form>
+      </div>
+
+      <div class="msg-list" id="greetingsList" style="margin-top:18px"></div>
+    </section>
+
+    <!-- SLIDE 8 -->
+    <section class="slide" id="slide-8" aria-label="Penutup" style="display:none">
+      <div class="overlay-dark" aria-hidden="true"></div>
+
+      <div class="thanks-box anim a4" style="text-align:center">
+        <img src="pasangan.png" alt="Pasangan" class="thanks-photo" style="display:block;margin:0 auto">
+        <div class="thanks-name">Lina & Faqih</div>
+        <div style="margin-top:10px;font-size:18px">Terima Kasih</div>
+        <div style="margin-top:12px;font-size:13px;color:#555">Semoga do'a dan restu Bapak/Ibu menjadi berkah bagi kami.</div>
       </div>
     </section>
 
-    <!-- SLIDE 8: PENUTUP -->
-    <section class="slide closing" id="slide-8">
-      <div class="thanks-box a4-frame fade-up">
-        <img src="pasangan.png" style="width:180px;height:180px;border-radius:12px;object-fit:cover">
-        <div class="names" style="font-size:36px;color:var(--accent);margin-top:10px">Lina &amp; Faqih</div>
-        <div style="margin-top:8px">Terima Kasih</div>
-      </div>
-    </section>
+  </div><!-- /viewport -->
 
+  <!-- Controls bottom (hidden until open) -->
+  <div class="controls" id="controls" aria-hidden="true">
+    <button class="icon-btn" id="toggleAuto" title="Pause/Play Auto-scroll">⏯</button>
+    <button class="icon-btn" id="muteBtn" title="Mute/Unmute Music">🔈</button>
+    <button class="icon-btn" id="btnTop" title="Kembali ke Atas">🏠</button>
   </div>
 
-  <!-- Controls (hidden until open) -->
-  <div class="controls" id="controls" style="display:none">
-    <button class="icon-btn" id="toggleAuto">⏯</button>
-    <button class="icon-btn" id="muteBtn">🔈</button>
-    <button class="icon-btn" data-target="slide-1" title="Cover">🏠</button>
-    <button class="icon-btn" data-target="slide-2" title="Countdown">⏳</button>
-    <button class="icon-btn" data-target="slide-5" title="SaveDate">📅</button>
-  </div>
+  <!-- Snow canvas -->
+  <canvas id="snowCanvas"></canvas>
 
-  <!-- audio element -->
+  <!-- Audio element (preload but will only play on user gesture) -->
   <audio id="bgMusic" src="lagu.mp3" loop preload="auto"></audio>
 
-  <!-- snow canvas -->
-  <canvas id="snowCanvas" style="position:fixed;left:0;top:0;pointer-events:none;z-index:60"></canvas>
-
   <script>
-    // === helper: read recipient name from URL ===
-    const params = new URLSearchParams(location.search);
-    const guest = params.get('to') || params.get('nama') || params.get('kepada');
-    if(guest){document.getElementById('toName').textContent = decodeURIComponent(guest);} 
-
-    // === lock behavior ===
-    const lockLayer = document.getElementById('lockLayer');
-    const openBtn = document.getElementById('openBtn');
+    /***********************
+     * Initialization
+     ***********************/
     const viewport = document.getElementById('viewport');
+    const lockLayer = document.getElementById('lockLayer');
+    const openBtn = document.getElementById('openInvite');
     const controls = document.getElementById('controls');
     const bgMusic = document.getElementById('bgMusic');
 
-    openBtn.addEventListener('click', async ()=>{
-      // remove lock and show controls
-      lockLayer.style.display='none';
-      controls.style.display='flex';
-      // ensure top of viewport stays at slide 2 top
-      document.getElementById('slide-2').scrollIntoView({behavior:'smooth'});
-      // try play music (may be blocked in some browsers until user gesture which this is)
-      try{ await bgMusic.play(); }catch(e){console.warn('audio play blocked',e)}
+    // show recipient name from URL ?to=
+    const params = new URLSearchParams(location.search);
+    const recipient = params.get('to') || params.get('nama') || params.get('kepada') || '';
+    if(recipient) document.getElementById('toName').textContent = decodeURIComponent(recipient);
+
+    // list of slide elements (we will show/hide as per earlier UI)
+    const slides = {
+      1: document.getElementById('slide-1'),
+      2: document.getElementById('slide-2'),
+      3: document.getElementById('slide-3'),
+      4: document.getElementById('slide-4'),
+      5: document.getElementById('slide-5'),
+      6: document.getElementById('slide-6'),
+      7: document.getElementById('slide-7'),
+      8: document.getElementById('slide-8'),
+    };
+
+    // Ensure only slide 1 visible initially (others display:none)
+    for(let i=2;i<=8;i++){ slides[i].style.display = 'none'; }
+
+    /***********************
+     * Open Invitation (user gesture)
+     ***********************/
+    openBtn.addEventListener('click', async function(){
+      // remove lock overlay and allow scrolling
+      lockLayer.style.display = 'none';
+      document.documentElement.style.overflow = ''; // allow page scroll
+      // show slide 2
+      slides[2].style.display = '';
+      // animate in-slide elements by adding .in (IntersectionObserver also handles later)
+      setTimeout(()=>{ markInView(); }, 150);
+      // play music (gesture)
+      try { await bgMusic.play(); } catch(e){ console.warn('Audio play blocked', e); }
+      // show controls
+      controls.classList.add('show');
+      controls.setAttribute('aria-hidden','false');
+      // show slide3 later (we keep all slides stacked; user can scroll)
+      // reveal slide3..8 but keep them display none until they enter viewport via observer
+      for(let i=3;i<=8;i++){ slides[i].style.display = ''; }
+      // start auto scroll gentle after short delay
+      startAutoScroll();
     });
 
-    // === countdown to target (WIB) ===
+    /***********************
+     * Countdown (14 Dec 2025 08:00 WIB -> 01:00 UTC)
+     ***********************/
     function updateCountdown(){
-      // target: 14 Dec 2025 08:00 WIB -> UTC+7
-      const targetUTC = Date.UTC(2025,11,14,1,0,0); // 08:00 WIB = 01:00 UTC
+      const targetUTCms = Date.UTC(2025,11,14,1,0,0); // months 0-indexed
       const now = Date.now();
-      let diff = Math.max(0, targetUTC - now);
+      let diff = Math.max(0, targetUTCms - now);
       const days = Math.floor(diff / (1000*60*60*24));
       diff -= days*(1000*60*60*24);
       const hours = Math.floor(diff / (1000*60*60));
@@ -307,68 +388,182 @@
       const minutes = Math.floor(diff / (1000*60));
       diff -= minutes*(1000*60);
       const seconds = Math.floor(diff/1000);
-      document.getElementById('days').textContent = days;
-      document.getElementById('hours').textContent = String(hours).padStart(2,'0');
-      document.getElementById('minutes').textContent = String(minutes).padStart(2,'0');
-      document.getElementById('seconds').textContent = String(seconds).padStart(2,'0');
+      document.getElementById('cd-days').textContent = days;
+      document.getElementById('cd-hours').textContent = String(hours).padStart(2,'0');
+      document.getElementById('cd-minutes').textContent = String(minutes).padStart(2,'0');
+      document.getElementById('cd-seconds').textContent = String(seconds).padStart(2,'0');
     }
-    updateCountdown(); setInterval(updateCountdown,1000);
+    updateCountdown();
+    setInterval(updateCountdown,1000);
 
-    // === save to calendar (generate .ics and download) ===
-    document.getElementById('saveCal').addEventListener('click', ()=>{
+    /***********************
+     * Save to calendar (.ics generation)
+     ***********************/
+    document.getElementById('saveCalendar').addEventListener('click', function(){
       const title = 'Akad & Resepsi — Lina & Faqih';
+      const desc = 'Undangan pernikahan Lina & Faqih — Rumah Lina';
       const start = '20251214T010000Z';
       const end = '20251214T040000Z';
-      const desc = 'Undangan pernikahan Lina & Faqih — Rumah Lina';
-      const ics = `BEGIN:VCALENDAR
-VERSION:2.0
-BEGIN:VEVENT
-UID:${Date.now()}@linafaqih
-DTSTAMP:${start}
-DTSTART:${start}
-DTEND:${end}
-SUMMARY:${title}
-DESCRIPTION:${desc}
-END:VEVENT
-END:VCALENDAR`;
+      const ics = `BEGIN:VCALENDAR\nVERSION:2.0\nBEGIN:VEVENT\nUID:${Date.now()}@linafaqih\nDTSTAMP:${start}\nDTSTART:${start}\nDTEND:${end}\nSUMMARY:${title}\nDESCRIPTION:${desc}\nEND:VEVENT\nEND:VCALENDAR`;
       const blob = new Blob([ics],{type:'text/calendar;charset=utf-8'});
       const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');a.href = url;a.download='lina-faqih.ics';document.body.appendChild(a);a.click();a.remove();
-      URL.revokeObjectURL(url);
+      const a = document.createElement('a'); a.href = url; a.download = 'lina-faqih.ics'; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
     });
 
-    // === copy rekening ===
-    document.querySelectorAll('.copy-btn').forEach(b=>b.addEventListener('click',(e)=>{const v=e.currentTarget.dataset.copy||'BCA - 1234567890';navigator.clipboard.writeText(v).then(()=>alert('Nomor rekening disalin: '+v)).catch(()=>prompt('Salin manual:',v))}))
+    /***********************
+     * Copy rekening
+     ***********************/
+    document.querySelectorAll('.copy-btn').forEach(b=>{
+      b.addEventListener('click', ()=> {
+        const text = b.dataset.acc || b.getAttribute('data-acc') || b.textContent;
+        navigator.clipboard.writeText(text).then(()=>{ alert('Nomor rekening disalin: ' + text); }).catch(()=>{ prompt('Salin manual:', text); });
+      });
+    });
 
-    // === greetings add ===
-    document.getElementById('greetAdd').addEventListener('click',(e)=>{e.preventDefault();const v=document.getElementById('greetInput').value.trim();if(!v)return alert('Isi pesan & nama');const it=document.createElement('div');it.className='greet-item';it.textContent=v;document.getElementById('greetList').prepend(it);document.getElementById('greetInput').value='';})
+    /***********************
+     * Greetings (localStorage)
+     ***********************/
+    const greetForm = document.getElementById('greetForm');
+    const gList = document.getElementById('greetingsList');
 
-    // === controls: show/hide & nav ===
-    document.querySelectorAll('.controls [data-target]').forEach(btn=>btn.addEventListener('click',()=>{const t=btn.dataset.target;document.getElementById(t).scrollIntoView({behavior:'smooth'})}))
-    document.getElementById('muteBtn').addEventListener('click',()=>{bgMusic.muted=!bgMusic.muted;document.getElementById('muteBtn').textContent=bgMusic.muted?'🔇':'🔈'})
+    function loadMessages(){
+      const arr = JSON.parse(localStorage.getItem('greetings')||'[]');
+      gList.innerHTML = '';
+      arr.reverse().forEach(it=>{
+        const el = document.createElement('div'); el.className='msg-item';
+        el.innerHTML = `<strong style="color:var(--accent)">${escapeHtml(it.name)}</strong><div style="margin-top:6px">${escapeHtml(it.msg)}</div>`;
+        gList.appendChild(el);
+      });
+    }
+    loadMessages();
 
-    // auto-scroll (gentle): only active after open; pause when user scrolls manually
-    let auto = true;let autoTimer=null;const vp=document.getElementById('viewport');
-    function startAuto(){stopAuto();autoTimer=setInterval(()=>{if(auto) vp.scrollBy({top:0.6,behavior:'smooth'})},40)}
-    function stopAuto(){if(autoTimer)clearInterval(autoTimer);}
-    document.getElementById('toggleAuto').addEventListener('click',()=>{auto=!auto;document.getElementById('toggleAuto').textContent=auto?'⏯':'⏸';})
-    // start auto only after open
-    openBtn.addEventListener('click',()=>{startAuto();});
-    // if user scrolls manually, pause automatic for a short while
-    let lastScroll=0;vp.addEventListener('scroll',()=>{lastScroll=Date.now();auto=false;setTimeout(()=>{if(Date.now()-lastScroll>2500)auto=true},2600)})
+    greetForm && greetForm.addEventListener('submit', function(e){
+      e.preventDefault();
+      const name = document.getElementById('gname').value.trim();
+      const msg = document.getElementById('gmsg').value.trim();
+      if(!name || !msg) return alert('Isi nama & ucapan');
+      const arr = JSON.parse(localStorage.getItem('greetings')||'[]');
+      arr.push({name:name,msg:msg,ts:Date.now()});
+      localStorage.setItem('greetings', JSON.stringify(arr));
+      document.getElementById('gname').value=''; document.getElementById('gmsg').value='';
+      loadMessages();
+    });
 
-    // === IntersectionObserver to animate elements when they enter view ===
-    const io = new IntersectionObserver((entries)=>{entries.forEach(ent=>{if(ent.isIntersecting){ent.target.classList.add('in-view');}})},{threshold:0.18});
-    document.querySelectorAll('.fade-up').forEach(el=>io.observe(el));
-    document.querySelectorAll('.cd-box').forEach(el=>io.observe(el));
+    document.getElementById('clearMsgs').addEventListener('click', ()=>{
+      if(confirm('Hapus semua ucapan dari localStorage?')){ localStorage.removeItem('greetings'); loadMessages(); }
+    });
 
-    // === Snow effect (canvas) ===
-    const snowCanvas = document.getElementById('snowCanvas');const sctx=snowCanvas.getContext('2d');let sw,sh;function resize(){sw=snowCanvas.width=window.innerWidth;sh=snowCanvas.height=window.innerHeight}window.addEventListener('resize',resize);resize();let flakes=[];for(let i=0;i<120;i++)flakes.push({x:Math.random()*sw,y:Math.random()*sh,r:Math.random()*3+1,d:Math.random()*2});function snowDraw(){sctx.clearRect(0,0,sw,sh);sctx.fillStyle='rgba(255,255,255,0.85)';flakes.forEach(f=>{sctx.beginPath();sctx.arc(f.x,f.y,f.r,0,Math.PI*2);sctx.fill();f.y += Math.pow(f.r,1.3)+0.2;f.x += Math.sin(f.d); if(f.y>sh){f.y=-10;f.x=Math.random()*sw}});requestAnimationFrame(snowDraw)}snowDraw();
+    function escapeHtml(s){ return (s+'').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 
-    // === small accessibility / cleanup ===
-    window.addEventListener('pagehide',()=>{bgMusic.pause();stopAuto();});
+    /***********************
+     * Auto-scroll gentle
+     ***********************/
+    let auto = true;
+    let autoTimer = null;
+    const SCROLL_STEP = 0.6; // px per tick
+    const SCROLL_INTERVAL_MS = 40;
+
+    function startAutoScroll(){
+      stopAutoScroll();
+      autoTimer = setInterval(()=>{
+        if(!auto) return;
+        // only auto-scroll if user near not at bottom
+        const max = viewport.scrollHeight - viewport.clientHeight;
+        if(Math.abs(viewport.scrollTop - max) < 10){ stopAutoScroll(); return; }
+        viewport.scrollBy({ top: SCROLL_STEP, left:0, behavior: 'smooth' });
+      }, SCROLL_INTERVAL_MS);
+    }
+    function stopAutoScroll(){ if(autoTimer){ clearInterval(autoTimer); autoTimer=null; } }
+
+    // toggle button
+    document.getElementById('toggleAuto').addEventListener('click', ()=>{
+      auto = !auto;
+      document.getElementById('toggleAuto').textContent = auto ? '⏯' : '⏸';
+      if(auto) startAutoScroll(); else stopAutoScroll();
+    });
+
+    // pause auto when user scrolls manually for a while
+    let lastManual = 0;
+    viewport.addEventListener('scroll', ()=> {
+      lastManual = Date.now();
+      if(auto){ auto = false; document.getElementById('toggleAuto').textContent='⏸'; }
+      // resume after 2.6s of idle
+      setTimeout(()=>{ if(Date.now() - lastManual > 2600){ auto = true; document.getElementById('toggleAuto').textContent='⏯'; } }, 2700);
+    });
+
+    /***********************
+     * Mute/unmute music control
+     ***********************/
+    const muteBtn = document.getElementById('muteBtn');
+    let muted = false;
+    muteBtn.addEventListener('click', ()=>{
+      muted = !muted; bgMusic.muted = muted; muteBtn.textContent = muted ? '🔇' : '🔈';
+    });
+
+    /***********************
+     * Controls: scroll top
+     ***********************/
+    document.getElementById('btnTop').addEventListener('click', ()=>{ viewport.scrollTo({top:0,behavior:'smooth'}); });
+
+    /***********************
+     * IntersectionObserver for animations (show .anim elements when in viewport)
+     ***********************/
+    const io = new IntersectionObserver((entries)=>{
+      entries.forEach(en=>{
+        if(en.isIntersecting){
+          en.target.classList.add('in');
+        }
+      });
+    }, {threshold:0.15});
+
+    // observe all anim elements we created
+    document.querySelectorAll('.anim').forEach(el=> io.observe(el));
+
+    // helper to mark initial ones in view after open
+    function markInView(){ document.querySelectorAll('.anim').forEach(el=>{ const r = el.getBoundingClientRect(); if(r.top < window.innerHeight) el.classList.add('in'); })}
+
+    /***********************
+     * Snow effect using canvas
+     ***********************/
+    const canvas = document.getElementById('snowCanvas');
+    const ctx = canvas.getContext('2d');
+    let W = 0, H = 0;
+    function resizeCanvas(){ W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+    const flakes = [];
+    for(let i=0;i<140;i++) flakes.push({x:Math.random()*W, y:Math.random()*H, r:Math.random()*3+1, d:Math.random()*2});
+    function drawSnow(){
+      ctx.clearRect(0,0,W,H);
+      ctx.fillStyle = 'rgba(255,255,255,0.85)';
+      flakes.forEach(f=>{
+        ctx.beginPath(); ctx.arc(f.x,f.y,f.r,0,Math.PI*2); ctx.fill();
+        f.y += Math.pow(f.r,1.2)+0.4;
+        f.x += Math.sin(f.d);
+        if(f.y > H){ f.y = -10; f.x = Math.random()*W; }
+      });
+      requestAnimationFrame(drawSnow);
+    }
+    drawSnow();
+
+    /***********************
+     * Reveal behavior & initial setup
+     ***********************/
+    // reveal slide 2..8 only after open (we set display:'' earlier in open). If user refresh and wants to test without open, we still keep lock active.
+    // Start: lock layer visible (prevent scroll). Already placed.
+
+    // When open: start auto-scroll and show controls (handled on click)
+    function startAutoAfterOpenCheck(){ if(!autoTimer) startAutoScroll(); }
+
+    // small accessibility: pause music on pagehide
+    window.addEventListener('pagehide', ()=>{ try{ bgMusic.pause(); stopAutoScroll(); }catch(e){} });
+
+    /***********************
+     * Extra: ensure slides shown when user scrolls (for first-time preview)
+     ***********************/
+    // If user wants to preview all without clicking open (developer mode), they can remove lockLayer using console.
+    // For normal behavior we keep lock until open is clicked.
 
   </script>
-
 </body>
 </html>
